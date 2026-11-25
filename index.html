@@ -191,6 +191,77 @@ footer{position:relative;padding:8px 12px calc(10px + env(safe-area-inset-bottom
 .lv{flex:1;height:34px;display:flex;align-items:center;gap:3px}
 .lv i{flex:1;height:12%;border-radius:3px;background:var(--grad);transition:height .08s}
 
+/* Кружки */
+.circle{position:relative;width:min(240px,62vw);aspect-ratio:1;border-radius:50%;overflow:hidden;cursor:pointer;background:#000;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);touch-action:manipulation}
+.circle video{width:100%;height:100%;object-fit:cover;display:block;background:#111}
+.circle .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+.circle .ring circle{fill:none;stroke-width:3}
+.circle .ring .tr{stroke:rgba(255,255,255,.18)}
+.circle .ring .pr{stroke:#fff;stroke-linecap:round;stroke-dasharray:289;stroke-dashoffset:289;transition:stroke-dashoffset .2s linear}
+.circle .cplay{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.18);transition:opacity .2s}
+.circle .cplay span{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);backdrop-filter:blur(6px)}
+.circle .cplay svg{width:24px;height:24px;margin-left:3px}
+.circle.playing .cplay{opacity:0}
+.circle .cdur{position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:11.5px;color:#fff;padding:2px 9px;border-radius:99px;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(6px);font-variant-numeric:tabular-nums}
+.circle .cspin{position:absolute;inset:0;display:grid;place-items:center}
+.circle .cspin i{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bubble.circ{padding:0;background:none!important;border:0;box-shadow:none!important}
+.bubble.circ .t{left:50%;right:auto;transform:translateX(-50%);bottom:14px}
+.bubble.circ .expired{background:var(--bubble);border-radius:16px}
+
+/* Запись кружка */
+#circleRec{position:fixed;inset:0;z-index:45;background:rgba(6,7,18,.88);backdrop-filter:blur(18px);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;padding:20px;animation:fade .2s}
+.cbox{position:relative;width:min(78vw,50vh,340px);aspect-ratio:1}
+.cbox video{width:100%;height:100%;object-fit:cover;border-radius:50%;background:#111;display:block}
+.cbox svg{position:absolute;left:-8px;top:-8px;width:calc(100% + 16px);height:calc(100% + 16px);transform:rotate(-90deg)}
+.cbox circle{fill:none;stroke-width:2.2}
+.cbox .tr{stroke:rgba(255,255,255,.2)}
+.cbox .pr{stroke:#ff5d73;stroke-linecap:round;stroke-dasharray:289;stroke-dashoffset:289}
+.crtime{color:#fff;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;min-height:26px}
+.crhint{color:rgba(255,255,255,.7);font-size:13.5px;text-align:center;min-height:20px}
+.crbtns{display:flex;align-items:center;gap:28px}
+.crb{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.14)}
+.crb.main{width:80px;height:80px;background:#ff3b5c;box-shadow:0 10px 30px rgba(255,59,92,.5)}
+.crb.main.send{background:var(--grad);box-shadow:0 10px 30px rgba(124,92,255,.5)}
+.crb.main i{width:28px;height:28px;border-radius:50%;background:#fff;display:block}
+.crb.main svg{width:32px;height:32px}
+
+/* Рация */
+#walkie{flex:1;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:22px 20px calc(18px + env(safe-area-inset-bottom));
+  text-align:center;overflow-y:auto}
+#app.walk #walkie{display:flex}
+#app.walk #messages,#app.walk footer,#app.walk #panel,#app.walk #fab,#app.walk #status{display:none}
+.wchan{font-weight:800;font-size:21px}
+.wmem{font-size:13px;color:var(--muted);margin-top:5px;max-width:420px}
+.wstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:130px}
+.wtalk{display:flex;align-items:center;gap:14px;padding:12px 20px 12px 12px;border-radius:26px;background:var(--glass);border:1px solid var(--stroke);
+  opacity:0;transform:scale(.92);transition:.25s}
+.wtalk.on{opacity:1;transform:none}
+.wtalk .av{width:46px;height:46px;border-radius:16px;font-size:19px}
+.wtalk small{display:block;color:var(--muted);font-size:12px}
+.eq{display:flex;gap:3px;align-items:center;height:28px;margin-left:6px}
+.eq i{width:4px;height:25%;border-radius:3px;background:var(--grad);animation:eq .9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.25s}.eq i:nth-child(3){animation-delay:-.5s}.eq i:nth-child(4){animation-delay:-.15s}.eq i:nth-child(5){animation-delay:-.7s}
+@keyframes eq{0%,100%{height:22%}50%{height:100%}}
+.wstatus{font-size:15px;color:var(--muted);min-height:22px;font-variant-numeric:tabular-nums}
+.ptt{position:relative;width:184px;height:184px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  color:#fff;background:var(--grad);box-shadow:0 18px 50px rgba(124,92,255,.5);touch-action:none;user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;transition:transform .12s,background .2s,opacity .2s}
+.ptt svg{width:54px;height:54px}
+.ptt b{font-size:14px;letter-spacing:.3px}
+.ptt.wait{opacity:.65}
+.ptt.talk{transform:scale(.94);background:linear-gradient(135deg,#ff3b5c,#fb923c);box-shadow:0 18px 60px rgba(255,59,92,.55)}
+.ptt.talk::before,.ptt.talk::after{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,90,100,.6);animation:ring 1.4s ease-out infinite;pointer-events:none}
+.ptt.talk::after{animation-delay:.7s}
+@keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(1.75);opacity:0}}
+.whint{font-size:12.5px;color:var(--muted);line-height:1.55;max-width:340px;margin-top:18px}
+.wexit{margin-top:12px;padding:11px 22px;border-radius:99px;background:var(--glass);border:1px solid var(--stroke);font-weight:600;font-size:14px}
+.wexit.accent{background:var(--grad);color:#fff;border:0}
+
 /* Лайтбокс и тост */
 #lightbox{position:fixed;inset:0;z-index:50;background:rgba(5,6,15,.88);display:grid;place-items:center;padding:20px;cursor:zoom-out;
   backdrop-filter:blur(10px);animation:fade .2s}
@@ -225,6 +296,7 @@ footer{position:relative;padding:8px 12px calc(10px + env(safe-area-inset-bottom
   <header>
     <div class="hav">#</div>
     <div class="htext"><div class="rname" id="rname"></div><div class="rsub" id="rsub">только вы</div></div>
+    <button class="ib" id="btnWalkie" title="Рация"></button>
     <button class="ib" id="btnShare" title="Пригласить друзей"></button>
     <button class="ib" id="btnSound" title="Звук"></button>
     <button class="ib" id="btnTheme" title="Тема"></button>
@@ -233,6 +305,21 @@ footer{position:relative;padding:8px 12px calc(10px + env(safe-area-inset-bottom
   <div id="messages"></div>
   <button id="fab" class="hidden"></button>
 
+  <section id="walkie">
+    <div>
+      <div class="wchan" id="wchan">Рация</div>
+      <div class="wmem" id="wmem"></div>
+    </div>
+    <div class="wstage">
+      <div class="wtalk" id="wtalk"></div>
+      <div class="wstatus" id="wstatus">Эфир свободен</div>
+      <button class="wexit accent hidden" id="wsound">🔊 Включить звук</button>
+    </div>
+    <button class="ptt" id="pttBtn"><span id="pttIcon"></span><b id="pttLabel">Удерживайте</b></button>
+    <div class="whint">Удерживайте кнопку и говорите, отпустите, и друзья сразу услышат вас. На компьютере можно держать пробел.<br>Держите экран включённым и эту вкладку открытой, иначе звук не придёт.</div>
+    <button class="wexit" id="wExit">Выйти из рации</button>
+  </section>
+
   <div id="panel" class="hidden">
     <div class="tabs"><button id="tabEmoji" class="on">Эмодзи</button><button id="tabGif">GIF</button></div>
     <div class="pbody" id="pbody"></div>
@@ -240,6 +327,7 @@ footer{position:relative;padding:8px 12px calc(10px + env(safe-area-inset-bottom
 
   <footer>
     <div id="attachMenu" class="hidden">
+      <button data-pick="circle"><span class="mi" style="background:linear-gradient(135deg,#ff3b5c,#fb923c)" data-i="circleVid"></span>Видео-кружок</button>
       <button data-pick="media"><span class="mi" style="background:linear-gradient(135deg,#ec4899,#f97316)" data-i="image"></span>Фото, GIF, видео</button>
       <button data-pick="audio"><span class="mi" style="background:linear-gradient(135deg,#7c5cff,#22d3ee)" data-i="music"></span>Аудио / MP3</button>
       <button data-pick="any"><span class="mi" style="background:linear-gradient(135deg,#10b981,#06b6d4)" data-i="file"></span>Любой файл</button>
@@ -260,6 +348,19 @@ footer{position:relative;padding:8px 12px calc(10px + env(safe-area-inset-bottom
 </div>
 
 <div id="lightbox" class="hidden"><img alt=""></div>
+<div id="circleRec" class="hidden">
+  <div class="cbox">
+    <video id="crVideo" autoplay playsinline muted></video>
+    <svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="46"/><circle class="pr" id="crRing" cx="50" cy="50" r="46"/></svg>
+  </div>
+  <div class="crtime" id="crTime"></div>
+  <div class="crhint" id="crHint"></div>
+  <div class="crbtns">
+    <button class="crb" id="crCancel" title="Отмена"></button>
+    <button class="crb main" id="crMain" title="Записать"></button>
+    <button class="crb" id="crFlip" title="Другая камера"></button>
+  </div>
+</div>
 <div id="toast"></div>
 <input type="file" id="fMedia" accept="image/*,video/*" multiple hidden>
 <input type="file" id="fAudio" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac" multiple hidden>
@@ -296,11 +397,18 @@ const I = {
   down: svg('<path d="M6 9l6 6 6-6"/>'),
   file: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/>'),
   music: svg('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),
-  image: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>')
+  image: svg('<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>'),
+  radio: svg('<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M7 8l9-5M8 13h5M16 14h.01M16 17h.01M8 17h5"/>'),
+  circleVid: svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/>'),
+  flip: svg('<path d="M3 12a9 9 0 019-9 9.8 9.8 0 016.7 2.7L21 8M21 3v5h-5M21 12a9 9 0 01-9 9 9.8 9.8 0 01-6.7-2.7L3 16M3 21v-5h5"/>')
 };
 document.querySelectorAll('[data-i]').forEach(e => e.innerHTML = I[e.dataset.i]);
 $('#logoIcon').innerHTML = I.chat;
 $('#btnShare').innerHTML = I.share;
+$('#btnWalkie').innerHTML = I.radio;
+$('#pttIcon').innerHTML = I.mic;
+$('#crCancel').innerHTML = I.trash;
+$('#crFlip').innerHTML = I.flip;
 $('#btnAttach').innerHTML = I.clip;
 $('#btnEmoji').innerHTML = I.smile;
 $('#btnRecCancel').innerHTML = I.trash;
@@ -331,6 +439,7 @@ let stick = true, missed = 0, unread = 0, ac = null;
 const seen = new Set(), members = new Set();
 let prev = { sender: null, time: 0, day: '' };
 let curAudio = null;
+let lastSendOk = true;
 
 /* ---------- Тема и звук ---------- */
 function applyTheme(t) {
@@ -407,7 +516,12 @@ function kindOfFile(f) {
 }
 
 /* ---------- Плеер ---------- */
-function audioPlayer({ url, title, voice, seed, duration, mine }) {
+function guessAudioType(url) {
+  const e = (url.split('?')[0].match(/\.([a-z0-9]+)$/i) || [])[1];
+  return ({ m4a: 'audio/mp4', mp4: 'audio/mp4', mp3: 'audio/mpeg', webm: 'audio/webm', ogg: 'audio/ogg', oga: 'audio/ogg',
+    opus: 'audio/ogg', wav: 'audio/wav', aac: 'audio/aac', flac: 'audio/flac' })[(e || '').toLowerCase()] || '';
+}
+function audioPlayer({ url, title, voice, seed, duration, mine, size }) {
   const wrap = el('div', 'aud');
   const btn = el('button', 'pbtn'); btn.innerHTML = I.play;
   const body = el('div', 'abody');
@@ -419,6 +533,15 @@ function audioPlayer({ url, title, voice, seed, duration, mine }) {
   body.append(wave, dur); wrap.append(btn, body);
 
   const a = new Audio(); a.preload = 'metadata'; a.src = url;
+  // Safari/iPhone плохо играет файлы потоком и обрывает их. Поэтому скачиваем целиком и играем из памяти.
+  if (!size || size <= 8 * 1048576) {
+    fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(bl => {
+      if (!a.paused || a.currentTime > 0) return;
+      const ty = guessAudioType(url);
+      const good = bl.type && bl.type !== 'application/octet-stream' ? bl : new Blob([bl], { type: ty });
+      a.src = URL.createObjectURL(good); a.load();
+    }).catch(() => {});
+  }
   const paint = () => {
     const d = isFinite(a.duration) ? a.duration : duration || 0;
     const p = d ? a.currentTime / d : 0;
@@ -436,7 +559,12 @@ function audioPlayer({ url, title, voice, seed, duration, mine }) {
   a.addEventListener('ended', () => { btn.innerHTML = I.play; a.currentTime = 0; paint(); });
   a.addEventListener('pause', () => btn.innerHTML = I.play);
   a.addEventListener('play', () => btn.innerHTML = I.pause);
-  a.addEventListener('error', () => { wrap.replaceChildren(expiredNote()); });
+  a.addEventListener('error', () => {
+    const d = el('div', 'expired'); d.innerHTML = I.file;
+    const t = el('span'); t.append('Не удаётся воспроизвести: формат не поддерживается устройством или файл удалён. ');
+    const l = document.createElement('a'); l.href = url; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = 'Открыть файл';
+    t.appendChild(l); d.appendChild(t); wrap.replaceChildren(d);
+  });
   btn.onclick = () => {
     if (a.paused) { if (curAudio && curAudio !== a) curAudio.pause(); curAudio = a; a.play().catch(() => toast('Не удалось воспроизвести')); }
     else a.pause();
@@ -482,6 +610,7 @@ function avatar(name) {
 function updateMembers() {
   const list = [...members];
   $('#rsub').textContent = list.length ? `${list.length} в чате: ${list.join(', ')}` : 'только вы';
+  const wm = $('#wmem'); if (wm) wm.textContent = list.length ? 'На связи: ' + list.join(', ') : '';
 }
 function setupImg(img, url) {
   img.referrerPolicy = 'no-referrer'; img.loading = 'lazy'; img.src = url; img.alt = '';
@@ -519,10 +648,14 @@ function render(m) {
   const att = m.attachment;
 
   if (att) {
-    const kind = ['img', 'video', 'audio', 'voice', 'file'].find(k => tags.includes(k)) ||
+    const kind = ['circle', 'img', 'video', 'audio', 'voice', 'file'].find(k => tags.includes(k)) ||
       kindOfFile({ type: att.type, name: att.name });
     const gone = att.expires && att.expires * 1000 < Date.now();
     if (gone) { b.appendChild(expiredNote()); }
+    else if (kind === 'circle') {
+      b.classList.add('media', 'circ');
+      b.appendChild(circlePlayer({ url: att.url, duration: parseInt(m.message, 10) || 0 }));
+    }
     else if (kind === 'img') {
       b.classList.add('media'); const im = new Image(); setupImg(im, att.url); b.appendChild(im);
     } else if (kind === 'video') {
@@ -531,7 +664,7 @@ function render(m) {
       v.onerror = () => { b.replaceChildren(expiredNote()); }; b.appendChild(v);
     } else if (kind === 'voice' || kind === 'audio') {
       const secs = kind === 'voice' ? parseInt(m.message, 10) || 0 : 0;
-      b.appendChild(audioPlayer({ url: att.url, voice: kind === 'voice', seed: m.id, duration: secs, mine,
+      b.appendChild(audioPlayer({ url: att.url, voice: kind === 'voice', seed: m.id, duration: secs, mine, size: att.size,
         title: kind === 'audio' ? (m.message || att.name) : '' }));
     } else {
       const a = el('a', 'filecard'); a.href = att.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.download = att.name || '';
@@ -556,10 +689,12 @@ function render(m) {
 function onIncoming(m) {
   const wasStick = stick;
   const mine = render(m);
+  if (live && !mine && walkieOn && (m.tags || []).includes('voice') && m.attachment &&
+      !(m.attachment.expires && m.attachment.expires * 1000 < Date.now())) walkieEnqueue(m);
   if (!live || mine) { stick = true; toBottom(false); return; }
   if (wasStick) toBottom(true); else { missed++; updateFab(); }
   if (m.title !== myName && !(m.tags || []).includes('sys')) {
-    beep();
+    if (!walkieOn) beep();
     if (document.hidden) { unread++; document.title = `(${unread}) Чат с друзьями`; }
   }
 }
@@ -587,9 +722,9 @@ async function sendText(text, tags) {
   } catch { toast('Не удалось отправить. Проверьте интернет'); return false; }
 }
 
-function upload(blob, { kind, filename, label }, onProgress) {
+function upload(blob, { kind, filename, label, tags }, onProgress) {
   return new Promise((resolve, reject) => {
-    const q = new URLSearchParams({ t: myName, tags: kind, f: filename, m: label || filename });
+    const q = new URLSearchParams({ t: myName, tags: tags || kind, f: filename, m: label || filename });
     const x = new XMLHttpRequest();
     x.open('PUT', `${NTFY}/${topic}?${q}`);
     x.upload.onprogress = e => e.lengthComputable && onProgress(e.loaded / e.total);
@@ -600,7 +735,8 @@ function upload(blob, { kind, filename, label }, onProgress) {
 }
 
 async function sendBlob(blob, opts) {
-  if (blob.size > MAX_FILE) { toast(`Файл больше ${fmtSize(MAX_FILE)}, отправить нельзя`); return; }
+  lastSendOk = true;
+  if (blob.size > MAX_FILE) { lastSendOk = false; toast(`Файл больше ${fmtSize(MAX_FILE)}, отправить нельзя`); return; }
   const row = el('div', 'row mine first'); const col = el('div', 'col'); const b = el('div', 'bubble pend');
   const sp = el('span'); sp.textContent = 'Отправка…'; const bar = el('div', 'bar'); const fill = document.createElement('i'); bar.appendChild(fill);
   b.append(sp, bar); col.appendChild(b); row.appendChild(col);
@@ -609,6 +745,7 @@ async function sendBlob(blob, opts) {
   try {
     await upload(blob, opts, p => { fill.style.width = Math.round(p * 100) + '%'; sp.textContent = 'Отправка… ' + Math.round(p * 100) + '%'; });
   } catch (e) {
+    lastSendOk = false;
     toast(String(e.message) === '413' || String(e.message) === '429' ? 'Сервер отклонил файл (слишком большой или лимит исчерпан)' : 'Не удалось отправить файл');
   }
   row.remove();
@@ -734,7 +871,8 @@ async function startRec() {
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
   catch { toast('Нет доступа к микрофону. Разрешите его в настройках браузера'); return; }
   closePanel();
-  const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'].find(m => MediaRecorder.isTypeSupported(m)) || '';
+  // mp4/AAC первым: он играет и на iPhone, и на Android, и на компьютерах
+  const mime = ['audio/mp4;codecs=mp4a.40.2', 'audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus'].find(m => MediaRecorder.isTypeSupported(m)) || '';
   const mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
   const chunks = []; mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
   const r = { mr, stream, start: Date.now(), cancel: false, timer: 0, raf: 0, ctx: null };
@@ -748,7 +886,7 @@ async function startRec() {
     const ext = type.includes('mp4') ? 'm4a' : type.includes('ogg') ? 'ogg' : 'webm';
     sendBlob(blob, { kind: 'voice', filename: `voice-${Date.now()}.${ext}`, label: String(secs) });
   };
-  mr.start(250);
+  mr.start();   // без timeslice: Safari так пишет один целый файл, а не обрывки
 
   $('#composer').classList.add('hidden'); $('#recbar').classList.remove('hidden');
   const lv = $('#lv'); lv.replaceChildren(); const bars = [];
@@ -758,19 +896,26 @@ async function startRec() {
     const s = (Date.now() - r.start) / 1000; $('#rtime').textContent = fmtDur(s);
     if (s >= 300) stopRec(false);
   }, 200);
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)(); r.ctx = ctx;
-    const an = ctx.createAnalyser(); an.fftSize = 128; ctx.createMediaStreamSource(stream).connect(an);
-    const data = new Uint8Array(an.frequencyBinCount);
-    (function loop() {
-      an.getByteFrequencyData(data);
-      bars.forEach((b, i) => b.style.height = (10 + data[(i * 2) % data.length] / 255 * 90) + '%');
-      r.raf = requestAnimationFrame(loop);
-    })();
-  } catch {}
+  // На iPhone второй AudioContext на том же микрофоне ломает запись, поэтому там уровни рисуются «для вида»
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let real = false;
+  if (!ios) {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)(); r.ctx = ctx;
+      const an = ctx.createAnalyser(); an.fftSize = 128; ctx.createMediaStreamSource(stream).connect(an);
+      const data = new Uint8Array(an.frequencyBinCount);
+      (function loop() {
+        an.getByteFrequencyData(data);
+        bars.forEach((b, i) => b.style.height = (10 + data[(i * 2) % data.length] / 255 * 90) + '%');
+        r.raf = requestAnimationFrame(loop);
+      })();
+      real = true;
+    } catch {}
+  }
+  if (!real) r.fake = setInterval(() => bars.forEach(b => b.style.height = (14 + Math.random() * 86) + '%'), 130);
 }
 function cleanupRec(r) {
-  clearInterval(r.timer); cancelAnimationFrame(r.raf);
+  clearInterval(r.timer); clearInterval(r.fake); cancelAnimationFrame(r.raf);
   r.stream.getTracks().forEach(t => t.stop());
   if (r.ctx) r.ctx.close().catch(() => {});
   $('#recbar').classList.add('hidden'); $('#composer').classList.remove('hidden');
@@ -783,6 +928,274 @@ function stopRec(cancel) {
 }
 $('#btnRecCancel').onclick = () => stopRec(true);
 $('#btnRecSend').onclick = () => stopRec(false);
+
+/* ---------- Кружки: проигрывание ---------- */
+function circlePlayer({ url, duration }) {
+  const w = el('div', 'circle');
+  const v = document.createElement('video');
+  v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.preload = 'auto';
+  const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  ring.setAttribute('viewBox', '0 0 100 100'); ring.setAttribute('class', 'ring');
+  ring.innerHTML = '<circle class="tr" cx="50" cy="50" r="46"/><circle class="pr" cx="50" cy="50" r="46"/>';
+  const pr = ring.querySelector('.pr');
+  const play = el('div', 'cplay'); play.innerHTML = '<span>' + I.play + '</span>';
+  const dur = el('div', 'cdur'); dur.textContent = duration ? fmtDur(duration) : '';
+  const spin = el('div', 'cspin'); spin.innerHTML = '<i></i>';
+  w.append(v, ring, play, dur, spin);
+
+  v.addEventListener('loadeddata', () => { spin.remove(); if (v.currentTime === 0) v.currentTime = 0.05; });
+  v.addEventListener('error', () => {
+    const d = el('div', 'expired'); d.innerHTML = I.file;
+    const t = el('span'); t.append('Кружок не открывается: формат не поддерживается или файл удалён. ');
+    const l = document.createElement('a'); l.href = url; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = 'Открыть';
+    t.appendChild(l); d.appendChild(t); w.replaceChildren(d); w.style.cssText = 'width:auto;aspect-ratio:auto;border-radius:16px;background:none;box-shadow:none';
+  });
+  v.addEventListener('timeupdate', () => {
+    const d = isFinite(v.duration) ? v.duration : duration || 0;
+    if (d) { pr.style.strokeDashoffset = 289 * (1 - v.currentTime / d); dur.textContent = fmtDur(Math.max(0, d - v.currentTime)); }
+  });
+  v.addEventListener('play', () => w.classList.add('playing'));
+  v.addEventListener('pause', () => w.classList.remove('playing'));
+  v.addEventListener('ended', () => {
+    w.classList.remove('playing'); pr.style.strokeDashoffset = 289;
+    dur.textContent = fmtDur(duration || v.duration || 0); v.currentTime = 0.05;
+  });
+  w.onclick = () => {
+    if (!v.src) return;
+    if (v.paused) { if (curAudio && curAudio !== v) curAudio.pause(); curAudio = v; v.play().catch(() => toast('Не удалось воспроизвести')); }
+    else v.pause();
+  };
+  // Скачиваем целиком: iPhone не любит видео, которое тянется потоком
+  fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(bl => {
+    const ty = bl.type && bl.type !== 'application/octet-stream' ? bl.type : (/\.webm/i.test(url) ? 'video/webm' : 'video/mp4');
+    v.src = URL.createObjectURL(new Blob([bl], { type: ty }));
+  }).catch(() => { v.src = url; });
+  return w;
+}
+
+/* ---------- Кружки: запись ---------- */
+const CR_C = 289;
+let cr = null;
+function stopStream(s) { if (s) s.getTracks().forEach(t => t.stop()); }
+
+async function openCircle() {
+  if (cr) return;
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { toast('Запись видео не поддерживается в этом браузере'); return; }
+  closePanel(); $('#attachMenu').classList.add('hidden');
+  cr = { facing: 'user', state: 'preview', stream: null, mr: null, chunks: [], start: 0, timer: 0, cancel: false, mime: '' };
+  $('#circleRec').classList.remove('hidden'); crUI();
+  await crCam();
+}
+async function crCam() {
+  const c = cr; if (!c) return;
+  stopStream(c.stream); c.stream = null;
+  try {
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: c.facing, width: { ideal: 480 }, height: { ideal: 480 } }, audio: true });
+    if (cr !== c) { stopStream(s); return; }
+    c.stream = s;
+    const v = $('#crVideo'); v.srcObject = s; v.muted = true; v.playsInline = true;
+    v.style.transform = c.facing === 'user' ? 'scaleX(-1)' : 'none';
+    v.play().catch(() => {});
+  } catch { toast('Нет доступа к камере или микрофону. Разрешите их в браузере'); crFinish(false); }
+}
+function crUI() {
+  const c = cr; if (!c) return;
+  const rec = c.state === 'recording';
+  const m = $('#crMain'); m.classList.toggle('send', rec); m.innerHTML = rec ? I.send : '<i></i>';
+  m.title = rec ? 'Отправить' : 'Записать';
+  $('#crFlip').classList.toggle('hidden', rec);
+  $('#crHint').textContent = rec ? 'Идёт запись. Нажмите, чтобы отправить' : 'Нажмите красную кнопку, чтобы начать';
+  $('#crTime').textContent = rec ? '0:00' : 'до 60 секунд';
+}
+function crStart() {
+  const c = cr; if (!c || !c.stream || c.state !== 'preview') return;
+  const mime = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp8,opus', 'video/webm']
+    .find(m => MediaRecorder.isTypeSupported(m)) || '';
+  let mr;
+  try { mr = new MediaRecorder(c.stream, mime ? { mimeType: mime, videoBitsPerSecond: 700000, audioBitsPerSecond: 64000 } : { videoBitsPerSecond: 700000 }); }
+  catch { toast('Не удалось начать запись'); return; }
+  c.mr = mr; c.mime = mime; c.chunks = [];
+  mr.ondataavailable = e => { if (e.data.size) c.chunks.push(e.data); };
+  mr.onstop = () => {
+    stopStream(c.stream);
+    if (c.cancel) return;
+    const secs = Math.round((Date.now() - c.start) / 1000);
+    if (secs < 1) { toast('Слишком коротко'); return; }
+    const type = mr.mimeType || mime || 'video/mp4';
+    const blob = new Blob(c.chunks, { type });
+    sendBlob(blob, { kind: 'circle', filename: `circle-${Date.now()}.${type.includes('mp4') ? 'mp4' : 'webm'}`, label: String(secs) });
+  };
+  mr.start(); c.state = 'recording'; c.start = Date.now(); crUI();
+  c.timer = setInterval(() => {
+    const s = (Date.now() - c.start) / 1000;
+    $('#crTime').textContent = fmtDur(s);
+    $('#crRing').style.strokeDashoffset = CR_C * (1 - Math.min(1, s / 60));
+    if (s >= 60) crFinish(true);
+  }, 100);
+}
+function crFinish(send) {
+  const c = cr; if (!c) return;
+  clearInterval(c.timer); cr = null;
+  $('#circleRec').classList.add('hidden'); $('#crVideo').srcObject = null;
+  $('#crRing').style.strokeDashoffset = CR_C;
+  if (c.mr && c.mr.state !== 'inactive') { c.cancel = !send; c.mr.stop(); } else stopStream(c.stream);
+}
+$('#attachMenu [data-pick=circle]').addEventListener('click', openCircle);
+$('#crMain').onclick = () => { if (!cr) return; if (cr.state === 'preview') crStart(); else crFinish(true); };
+$('#crCancel').onclick = () => crFinish(false);
+$('#crFlip').onclick = () => { if (cr && cr.state === 'preview') { cr.facing = cr.facing === 'user' ? 'environment' : 'user'; crCam(); } };
+
+/* ---------- Рация ---------- */
+let walkieOn = false, wq = [], wPlaying = false, wAudio = null, wObj = null, wLock = null, wResume = false, ptt = null, pttTimer = 0;
+
+function silentWav() {   // тишина, чтобы «разбудить» звук на iPhone по нажатию
+  const n = 800, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
+  const w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true); v.setUint32(28, 16000, true);
+  v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+  return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+}
+function blip(f1, f2) {
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(f1, t); if (f2) o.frequency.setValueAtTime(f2, t + .07);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.07, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .16);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .18);
+  } catch {}
+}
+const wstat = t => { $('#wstatus').textContent = t; };
+function setPtt(s) {
+  const b = $('#pttBtn');
+  b.classList.toggle('talk', s === 'talk'); b.classList.toggle('wait', s === 'wait');
+  $('#pttLabel').textContent = s === 'talk' ? 'Говорите…' : s === 'wait' ? 'Подключаю…' : 'Удерживайте';
+}
+function showTalker(name) {
+  const w = $('#wtalk');
+  if (name) {
+    w.replaceChildren();
+    const info = el('div'); const n = document.createElement('b'); n.textContent = name;
+    const s = document.createElement('small'); s.textContent = 'говорит'; info.append(n, s);
+    const eq = el('div', 'eq'); eq.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+    w.append(avatar(name), info, eq); w.classList.add('on'); wstat('');
+  } else {
+    w.classList.remove('on'); if (!ptt) wstat('Эфир свободен');
+  }
+}
+async function lockOn() { try { if ('wakeLock' in navigator) wLock = await navigator.wakeLock.request('screen'); } catch {} }
+function lockOff() { try { wLock && wLock.release(); } catch {} wLock = null; }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && walkieOn) lockOn(); });
+
+function enterWalkie() {
+  if (walkieOn) return;
+  walkieOn = true; $('#app').classList.add('walk');
+  if (!wAudio) {
+    wAudio = new Audio(); wAudio.preload = 'auto';
+    wAudio.addEventListener('ended', () => { if (wAudio.src === wObj) walkieNext(); });
+    wAudio.addEventListener('error', () => { if (wAudio.src === wObj) walkieNext(); });
+  }
+  // один и тот же элемент <audio> после нажатия пользователя может играть сам, без новых нажатий
+  wAudio.src = silentWav(); wAudio.play().catch(() => {});
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch {}
+  navigator.mediaDevices?.getUserMedia?.({ audio: true }).then(stopStream).catch(() => toast('Разрешите микрофон, иначе рация не заработает'));
+  $('#wsound').classList.add('hidden'); wq = []; wPlaying = false; showTalker(null); setPtt('idle'); lockOn();
+}
+function exitWalkie() {
+  if (!walkieOn) return;
+  pttStop(false);
+  walkieOn = false; $('#app').classList.remove('walk'); wq = []; wPlaying = false; wResume = false;
+  if (wAudio) wAudio.pause(); lockOff();
+  setTimeout(() => toBottom(false), 50);
+}
+$('#btnWalkie').onclick = () => walkieOn ? exitWalkie() : enterWalkie();
+$('#wExit').onclick = exitWalkie;
+
+function walkieEnqueue(m) {
+  wq.push({ name: m.title || 'Аноним', url: m.attachment.url });
+  if (!wPlaying) walkieNext();
+}
+async function walkieNext() {
+  const it = wq.shift();
+  if (!it || !walkieOn) { wPlaying = false; showTalker(null); return; }
+  if (ptt) { wq.unshift(it); wPlaying = false; return; }   // пока вы говорите, чужое не играет
+  wPlaying = true; showTalker(it.name);
+  try {
+    const r = await fetch(it.url); if (!r.ok) throw new Error(r.status);
+    let bl = await r.blob();
+    if (!bl.type || bl.type === 'application/octet-stream') bl = new Blob([bl], { type: guessAudioType(it.url) });
+    if (wObj) URL.revokeObjectURL(wObj);
+    wObj = URL.createObjectURL(bl); wAudio.src = wObj;
+    await wAudio.play();
+  } catch (e) {
+    if (e && e.name === 'NotAllowedError') { wq.unshift(it); wPlaying = false; showTalker(null); $('#wsound').classList.remove('hidden'); return; }
+    walkieNext();   // битый клип пропускаем
+  }
+}
+$('#wsound').onclick = () => {
+  wAudio.src = silentWav();
+  wAudio.play().then(() => { $('#wsound').classList.add('hidden'); if (!wPlaying) walkieNext(); }).catch(() => toast('Коснитесь экрана ещё раз'));
+};
+
+function pttEnd(p) {
+  if (ptt === p) ptt = null;
+  clearInterval(pttTimer); setPtt('idle');
+  if (wResume) { wResume = false; if (wAudio) wAudio.play().catch(() => {}); }
+  if (!wPlaying && wq.length) walkieNext(); else if (!wPlaying) wstat('Эфир свободен');
+}
+async function pttStart() {
+  if (!walkieOn || ptt) return;
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { toast('Запись не поддерживается в этом браузере'); return; }
+  const p = { released: false, cancel: false, mr: null, start: 0, chunks: [] }; ptt = p;
+  if (wAudio && !wAudio.paused && wPlaying) { wAudio.pause(); wResume = true; }
+  setPtt('wait'); wstat('Подключаю микрофон…'); blip(900);
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { toast('Нет доступа к микрофону'); pttEnd(p); return; }
+  if (p.released || ptt !== p) { stopStream(stream); pttEnd(p); return; }
+  const mime = ['audio/mp4;codecs=mp4a.40.2', 'audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus']
+    .find(m => MediaRecorder.isTypeSupported(m)) || '';
+  let mr;
+  try { mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); }
+  catch { stopStream(stream); toast('Не удалось начать запись'); pttEnd(p); return; }
+  p.mr = mr;
+  mr.ondataavailable = e => { if (e.data.size) p.chunks.push(e.data); };
+  mr.onstop = async () => {
+    stopStream(stream); clearInterval(pttTimer);
+    const ms = Date.now() - p.start;
+    if (p.cancel) { pttEnd(p); return; }
+    if (ms < 600) { toast('Слишком коротко: держите кнопку, пока говорите'); pttEnd(p); return; }
+    const type = mr.mimeType || mime || 'audio/mp4';
+    const blob = new Blob(p.chunks, { type });
+    const ext = type.includes('mp4') ? 'm4a' : type.includes('ogg') ? 'ogg' : 'webm';
+    pttEnd(p); wstat('Отправляю…'); blip(700, 500);
+    await sendBlob(blob, { kind: 'voice', tags: 'voice,walkie', filename: `walkie-${Date.now()}.${ext}`, label: String(Math.round(ms / 1000)) });
+    wstat(lastSendOk ? 'Отправлено ✓' : 'Не отправлено');
+    setTimeout(() => { if (!ptt && !wPlaying) wstat('Эфир свободен'); }, 1600);
+  };
+  mr.start(); p.start = Date.now(); setPtt('talk'); wstat('Вы в эфире · 0:00');
+  if (navigator.vibrate) navigator.vibrate(25);
+  pttTimer = setInterval(() => {
+    const s = (Date.now() - p.start) / 1000; wstat('Вы в эфире · ' + fmtDur(s));
+    if (s >= 60) pttStop(true);
+  }, 200);
+}
+function pttStop(send) {
+  const p = ptt; if (!p) return;
+  p.released = true; p.cancel = !send;
+  if (p.mr && p.mr.state !== 'inactive') p.mr.stop();
+  else if (!p.mr && !send) { /* микрофон ещё подключается: pttStart сам всё остановит */ }
+}
+(() => {
+  const pb = $('#pttBtn');
+  pb.addEventListener('pointerdown', e => { e.preventDefault(); try { pb.setPointerCapture(e.pointerId); } catch {} pttStart(); });
+  pb.addEventListener('pointerup', () => pttStop(true));
+  pb.addEventListener('pointercancel', () => pttStop(true));
+  pb.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => { if (walkieOn && e.code === 'Space' && !e.repeat) { e.preventDefault(); pttStart(); } });
+  document.addEventListener('keyup', e => { if (walkieOn && e.code === 'Space') { e.preventDefault(); pttStop(true); } });
+})();
 
 /* ---------- Лайтбокс ---------- */
 $('#lightbox').onclick = () => $('#lightbox').classList.add('hidden');
@@ -814,7 +1227,7 @@ $('#loginForm').addEventListener('submit', async e => {
   try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch {}
   topic = await topicFor(room);
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-  $('#rname').textContent = room;
+  $('#rname').textContent = room; $('#wchan').textContent = 'Рация · ' + room;
   connect();
   sendText(`${name} зашёл в чат`, ['sys']);
   ta.focus();
