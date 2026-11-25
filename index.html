@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Чат с друзьями</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100vh; height: 100dvh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #0f1220; color: #e8eaf6;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hidden { display: none !important; }
+  #login {
+    background: #181c30; padding: 32px; border-radius: 18px;
+    width: min(380px, 92vw); text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,.4);
+  }
+  #login h1 { margin: 0 0 6px; font-size: 26px; }
+  #login p { margin: 0 0 18px; color: #9aa0c3; font-size: 14px; }
+  input {
+    width: 100%; padding: 13px 15px; font-size: 16px; color: inherit;
+    background: #0f1220; border: 1px solid #2b3050; border-radius: 12px; outline: none;
+  }
+  input:focus { border-color: #6c7bff; }
+  #login input { margin-bottom: 10px; }
+  button {
+    padding: 13px 20px; font-size: 16px; font-weight: 600; cursor: pointer;
+    background: #6c7bff; color: #fff; border: 0; border-radius: 12px;
+  }
+  button:hover { background: #5666f0; }
+  #login button { width: 100%; margin-top: 6px; }
+  .hint { font-size: 12px; color: #7f86ad; margin-top: 14px; }
+
+  #chat {
+    width: min(760px, 100vw); height: 100%; max-height: 900px;
+    display: flex; flex-direction: column;
+    background: #181c30; border-radius: 18px; overflow: hidden;
+  }
+  @media (max-width: 780px) { #chat { border-radius: 0; max-height: none; } }
+  header {
+    padding: 14px 18px; background: #1f2440;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  header b { font-size: 18px; }
+  #roomLabel { font-size: 13px; color: #9aa0c3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #messages {
+    flex: 1; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .msg {
+    max-width: 78%; padding: 8px 13px; border-radius: 14px;
+    background: #232948; overflow-wrap: anywhere;
+  }
+  .msg.mine { align-self: flex-end; background: #3b4ac2; }
+  .msg .who { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .msg .time { font-size: 11px; color: #9aa0c3; margin-left: 8px; font-weight: 400; }
+  .msg.mine .time { color: #c5caf5; }
+  .system { align-self: center; font-size: 12px; color: #7f86ad; }
+  form.send { display: flex; gap: 10px; padding: 12px; background: #1f2440; }
+  form.send input { flex: 1; }
+  #status { font-size: 12px; color: #ff8a8a; padding: 6px 18px; background: #1f2440; }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h1>💬 Чат с друзьями</h1>
+  <p>Введите имя и код комнаты. Друзья, которые введут тот же код, попадут в ваш чат.</p>
+  <form id="loginForm">
+    <input id="nameInput" maxlength="20" placeholder="Ваше имя" autocomplete="nickname">
+    <input id="roomInput" maxlength="40" placeholder="Код комнаты (придумайте любой)" autocomplete="off">
+    <button type="submit">Войти</button>
+  </form>
+  <div class="hint">Чем длиннее и необычнее код, тем сложнее чужим найти ваш чат.</div>
+</div>
+
+<div id="chat" class="hidden">
+  <header>
+    <b>💬 Чат</b>
+    <div id="roomLabel"></div>
+  </header>
+  <div id="messages"></div>
+  <div id="status" class="hidden">Нет соединения, переподключаюсь…</div>
+  <form class="send" id="sendForm">
+    <input id="textInput" maxlength="1000" placeholder="Напишите сообщение…" autocomplete="off">
+    <button type="submit">Отправить</button>
+  </form>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const NTFY = 'https://ntfy.sh';
+  let myName = '', topic = '', roomCode = '', es = null, lastId = null;
+  const seen = new Set();
+
+  function colorFor(name) {
+    let h = 0;
+    for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 360;
+    return `hsl(${h}, 80%, 72%)`;
+  }
+  const fmtTime = ts => new Date(ts * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  async function topicFor(code) {
+    const data = new TextEncoder().encode('dchat:' + code.toLowerCase());
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    return 'dchat-' + hex.slice(0, 32);
+  }
+
+  function addMessage(m) {
+    const box = $('messages');
+    const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 120;
+    const isSys = (m.tags || []).includes('sys');
+    const el = document.createElement('div');
+    if (isSys) {
+      el.className = 'system';
+      el.textContent = m.message;
+    } else {
+      const name = m.title || 'Аноним';
+      el.className = 'msg' + (name === myName ? ' mine' : '');
+      const who = document.createElement('div');
+      who.className = 'who';
+      who.style.color = colorFor(name);
+      who.textContent = name;
+      const time = document.createElement('span');
+      time.className = 'time';
+      time.textContent = fmtTime(m.time);
+      who.appendChild(time);
+      const text = document.createElement('div');
+      text.textContent = m.message;   // textContent: HTML из сообщений не выполняется
+      el.append(who, text);
+    }
+    box.appendChild(el);
+    if (nearBottom || m.title === myName) box.scrollTop = box.scrollHeight;
+  }
+
+  function connect() {
+    if (es) es.close();
+    const since = lastId || 'all';
+    es = new EventSource(`${NTFY}/${topic}/sse?since=${encodeURIComponent(since)}`);
+    es.onopen = () => $('status').classList.add('hidden');
+    es.onmessage = e => {
+      let m; try { m = JSON.parse(e.data); } catch { return; }
+      if (m.event !== 'message' || seen.has(m.id)) return;
+      seen.add(m.id);
+      lastId = m.id;
+      addMessage(m);
+    };
+    es.onerror = () => {
+      $('status').classList.remove('hidden');
+      es.close();
+      setTimeout(connect, 3000);
+    };
+  }
+
+  function publish(message, tags) {
+    return fetch(NTFY, {
+      method: 'POST',
+      body: JSON.stringify({ topic, message, title: myName, tags: tags || [] })
+    });
+  }
+
+  $('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = $('nameInput').value.trim();
+    const room = $('roomInput').value.trim();
+    if (!name || !room) return;
+    myName = name; roomCode = room;
+    try { localStorage.setItem('chatName', name); localStorage.setItem('chatRoom', room); } catch {}
+    topic = await topicFor(room);
+    $('login').classList.add('hidden');
+    $('chat').classList.remove('hidden');
+    $('roomLabel').textContent = 'Комната: ' + room;
+    connect();
+    publish(`${name} зашёл в чат`, ['sys']).catch(() => {});
+    $('textInput').focus();
+  });
+
+  $('sendForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const text = $('textInput').value.trim();
+    if (!text) return;
+    $('textInput').value = '';
+    try { await publish(text); } catch { $('status').classList.remove('hidden'); }
+    $('textInput').focus();
+  });
+
+  try {
+    $('nameInput').value = localStorage.getItem('chatName') || '';
+    $('roomInput').value = localStorage.getItem('chatRoom') || '';
+  } catch {}
+</script>
+</body>
+</html>
