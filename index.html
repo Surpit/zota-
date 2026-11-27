@@ -503,6 +503,24 @@ input.sw:checked{background:var(--a1)} input.sw:checked::after{transform:transla
 .nattr{display:grid;gap:6px;margin-bottom:8px}.nrow{display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;padding:9px 12px;border-radius:12px;background:var(--glass);font-size:14px}.nrow span{opacity:.7}.nrow small{opacity:.7}
 .tn.t1{color:#7cc4ff}.tn.t2{color:#c9a2ff}.tn.t3{color:#ffd65c}
 @media(prefers-reduced-motion:reduce){.nft .nmd,.nft::after{animation:none!important}}
+
+/* профиль v2 */
+.sheet .sbody:has(.pbanner){padding:0 0 18px}
+.pbanner{position:relative;height:118px;margin:-4px 0 0;overflow:hidden}.pbpat{position:absolute;inset:0;opacity:.35;background-image:radial-gradient(rgba(255,255,255,.5) 1.2px,transparent 1.6px);background-size:18px 18px}
+.pav{display:flex;justify-content:center;margin-top:-54px;position:relative}.pav .av{border:4px solid var(--sheet);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.pmain{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:8px 18px 4px}.pmain h2{margin:6px 0 0;font-size:24px;letter-spacing:-.02em}
+.pun{border:0;background:none;color:var(--a2);font:700 15px system-ui,sans-serif;cursor:pointer;padding:2px 6px}.pst{font-size:13px;opacity:.65}.pbio{margin:8px 0 0;max-width:380px;line-height:1.5;opacity:.9;white-space:pre-wrap;overflow-wrap:anywhere}
+.pacts{display:flex;gap:10px;padding:12px 18px 2px}.pacts .btn{flex:1}
+.sheet .sbody:has(.pbanner)>.sect,.sheet .sbody:has(.pbanner)>.gifts,.sheet .sbody:has(.pbanner)>.mcard,.sheet .sbody:has(.pbanner)>.btn{margin-left:18px;margin-right:18px}
+.sheet .sbody:has(.pbanner)>.btn{width:calc(100% - 36px)}
+.mcard{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--glass);border:1px solid var(--stroke)}
+.mcov{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,var(--a1),var(--a2));flex:none}
+.mcard.on .mcov{animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.mtx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.mtx b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mtx small{opacity:.65;font-size:12px}
+.mbar{height:3px;border-radius:2px;background:rgba(255,255,255,.15);overflow:hidden;margin-top:4px}.mbar i{display:block;height:100%;width:0;background:var(--a2)}
+.mplay{width:42px;height:42px;border-radius:50%;border:0;background:var(--a1);color:#fff;font-size:16px;cursor:pointer;flex:none}
+.group2{display:grid;gap:8px;margin:6px 0 10px}
+.av{background-size:cover}
 /* ===== Строгий вид: плоские цвета, один акцент, без свечения и градиентов ===== */
 :root{--bg:#0e1621;--panel:#17212b;--panel2:#1e2c3a;--text:#e8edf2;--muted:#7f91a4;--line:#0b121a;
   --a1:#2f81d6;--a2:#6ab3f3;--danger:#e5626f;--grad:var(--a1);--glass:var(--panel2);--glass-strong:var(--panel);--stroke:rgba(255,255,255,.08);
@@ -996,13 +1014,14 @@ const CH_EMO = ['📢', '📣', '💬', '🔔', '🎮', '🎵', '🎬', '📚', 
 const uInfo = uid => dir.users[uid] || { uid };
 const cName = c => c.kind === 'dm' ? (uInfo(c.peer).nick || c.name || 'Пользователь') : (c.name || 'Чат');
 function cEnt(c) {
-  if (c.kind === 'dm') { const u = uInfo(c.peer); return { e: u.e, h: u.h, name: cName(c) }; }
+  if (c.kind === 'dm') { const u = uInfo(c.peer); return { e: u.e, h: u.h, name: cName(c), p: u.p }; }
   return { e: c.e || (c.kind === 'channel' ? '📢' : '👥'), h: Number.isFinite(+c.h) ? +c.h : hueOf(c.id), name: c.name };
 }
 function avatar(o, size) {
   const a = el('div', 'av'), h = Number.isFinite(+o.h) && o.h !== null && o.h !== undefined && o.h !== '' ? +o.h : hueOf(o.name || '?');
   a.style.background = `linear-gradient(135deg,hsl(${h} 80% 60%),hsl(${(h + 45) % 360} 80% 48%))`;
   if (size) a.style.setProperty('--s', size + 'px');
+  if (o.p) { a.style.background = `center/cover no-repeat url(${o.p}),#333`; return a; }
   a.textContent = o.e || ([...(o.name || '?')][0] || '?').toUpperCase();
   return a;
 }
@@ -1205,8 +1224,13 @@ function ingestDir(raw, p) {
     if (!b.uid || b.uid === me.uid || b.uid !== p.u) return;
     const u = dir.users[b.uid] || (dir.users[b.uid] = { uid: b.uid });
     if ((u.t2 || 0) > raw.time) return;
-    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), gl: mergeGl(u.gl, cleanGl(b.gl)), t2: raw.time, nt: raw.time });
+    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), gl: mergeGl(u.gl, cleanGl(b.gl)), un: UN_RE.test(cleanUn(b.un)) ? cleanUn(b.un) : '', mu: cleanMu(b.mu), t2: raw.time, nt: raw.time });
     u.seen = Math.max(u.seen || 0, raw.time);
+  } else if (p.tags.includes('dp')) {
+    if (!b.uid || b.uid === me.uid || b.uid !== p.u || typeof b.p !== 'string') return;
+    const u = dir.users[b.uid] || (dir.users[b.uid] = { uid: b.uid });
+    if ((u.tp || 0) > raw.time) return;
+    if (b.p === '' || (/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(b.p) && b.p.length <= 4000)) { u.p = b.p; u.tp = raw.time; }
   } else if (p.tags.includes('dc')) {
     if (!b.id || !b.owner || b.owner !== p.u) return;
     const e = dir.chats[b.id] || (dir.chats[b.id] = { id: b.id });
@@ -1225,11 +1249,13 @@ async function publishMeta(c) {
   if (c.pub) await pubJSON(dirTopic, JSON.stringify({ ...meta, on: me.nick }), ['dir', 'dc']);
 }
 async function announce(force) {
+  refreshMusic();
   const last = +store.get('dc.ann', 0);
   if (!force && Date.now() - last < (me.gl && me.gl.length ? 600e3 : 3600e3)) return;
   store.set('dc.ann', String(Date.now()));
   try {
-    await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, nick: me.nick, bio: me.bio, e: me.e, h: me.h, f: me.f !== false, g: cleanGifts(me.gifts), gl: cleanGl(me.gl) }), ['dir', 'du']);
+    await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, nick: me.nick, bio: me.bio, e: me.e, h: me.h, f: me.f !== false, g: cleanGifts(me.gifts), gl: cleanGl(me.gl), un: me.un || '', mu: cleanMu(me.mu) }), ['dir', 'du']);
+    if (me.pt !== undefined) await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, p: me.pt }), ['dir', 'dp']);
     for (const c of Object.values(chats)) if (c.owner === me.uid && c.kind !== 'dm') await publishMeta(c);
   } catch {}
 }
@@ -1320,35 +1346,23 @@ function toggleRow(label, sub, val, fn) {
 }
 function avatarPicker(d, emojis, onChange, nameFn) {
   const w = el('div', 'apick'), prev = el('div');
-  const draw = () => prev.replaceChildren(avatar({ e: d.e, h: d.h, name: nameFn() }, 92));
+  const draw = () => prev.replaceChildren(avatar({ e: d.e, h: d.h, name: nameFn(), p: d.p }, 92));
   const eg = el('div', 'agrid');
   emojis.forEach(e => { const b = el('button', 'ebtn', e); b.type = 'button'; b.onclick = () => { d.e = e; draw(); onChange(); }; eg.appendChild(b); });
   const sw = el('div', 'swatches');
   HUES.forEach(h => { const b = el('button', 'sw1'); b.type = 'button'; b.style.background = `hsl(${h} 80% 58%)`; b.onclick = () => { d.h = h; draw(); onChange(); }; sw.appendChild(b); });
-  w.append(prev, eg, sw); draw(); return { node: w, redraw: draw };
+  w.append(prev);
+  if ('p' in d) {
+    const fi = document.createElement('input'); fi.type = 'file'; fi.accept = 'image/*'; fi.hidden = true;
+    const up = el('button', 'btn sec2 sm', '📷 Загрузить фото'), rm = el('button', 'btn sec2 sm', 'Убрать фото'); rm.style.display = d.p ? '' : 'none';
+    up.type = rm.type = 'button'; up.onclick = () => fi.click();
+    fi.onchange = async () => { const f = fi.files[0]; fi.value = ''; if (!f) return; try { const r = await readPhoto(f); d.p = r.p; d.pt = r.pt; rm.style.display = ''; draw(); onChange(); } catch { toast('Не удалось открыть фото'); } };
+    rm.onclick = () => { d.p = ''; d.pt = ''; rm.style.display = 'none'; draw(); onChange(); };
+    const rr = el('div', 'btnrow'); rr.append(up, rm, fi); w.appendChild(rr);
+  }
+  w.append(eg, sw); draw(); return { node: w, redraw: draw };
 }
 
-function sheetProfile(uid) {
-  const isMe = uid === me.uid, u = isMe ? me : uInfo(uid), nick = u.nick || (chats['dm:' + uid] && chats['dm:' + uid].name) || 'Пользователь';
-  openSheet('Профиль', (body, close) => {
-    const hero = el('div', 'shero'); hero.appendChild(avatar({ e: u.e, h: u.h, name: nick }, 96));
-    hero.append(el('h3', null, nick), el('small', null, isMe ? 'это вы' : seenText(u.seen)));
-    if (u.bio) hero.appendChild(el('p', null, u.bio)); body.appendChild(hero);
-    body.appendChild(el('div', 'sect', 'Подарки')); body.appendChild(giftsRow(isMe ? me.gifts : u.g, isMe ? me.gl : u.gl));
-    const g = el('div', 'group');
-    const idr = actionRow(I.copy, 'ID: ' + uid.slice(0, 8), 'Нажмите, чтобы скопировать', () => copyText(uid)); g.appendChild(idr);
-    body.appendChild(g);
-    const r = el('div', 'btnrow');
-    if (!isMe) {
-      const w = el('button', 'btn', 'Написать'); w.onclick = () => { close(); openDm(uid, nick); }; r.appendChild(w);
-      const gf = el('button', 'btn sec2', '🎁 Подарить'); gf.onclick = () => { close(); openDm(uid, nick); setTimeout(() => sheetGifts(uid), 150); }; r.appendChild(gf);
-      const bl = blocked.has(uid); const b = el('button', 'btn sec2', bl ? 'Разблокировать' : 'Заблокировать');
-      b.onclick = () => { if (bl) blocked.delete(uid); else blocked.add(uid); markDirty('blocked'); close(); toast(bl ? 'Разблокирован' : 'Заблокирован: его сообщения вам не придут'); };
-      r.appendChild(b);
-    } else { const b = el('button', 'btn', 'Редактировать'); b.onclick = () => { close(); showPage('profile'); }; r.appendChild(b); }
-    body.appendChild(r);
-  });
-}
 function sheetInvite(c) {
   openSheet(c.kind === 'channel' ? 'Пригласить в канал' : 'Пригласить в группу', (body, close) => {
     body.appendChild(el('p', 'note2', 'Отправьте друзьям код или ссылку. По ссылке они зайдут в один клик.'));
@@ -1497,8 +1511,8 @@ function renderSearch() {
     const mine = Object.values(chats).filter(c => cName(c).toLowerCase().includes(ql));
     if (mine.length) { box.appendChild(el('div', 'sec', 'Мои чаты')); mine.forEach(c => box.appendChild(chatItem(c, true))); }
   }
-  const users = Object.values(dir.users).filter(u => u.uid !== me.uid && u.f !== false && u.nick && (!q || u.nick.toLowerCase().includes(ql) || u.uid === q)).sort((a, b) => (b.seen || 0) - (a.seen || 0)).slice(0, 40);
-  if (users.length) { box.appendChild(el('div', 'sec', q ? 'Люди' : 'Люди')); users.forEach(u => { const it = srow(avatar(u, 46), u.nick, u.bio || seenText(u.seen), 'Написать', () => openDm(u.uid, u.nick)); it.onclick = () => sheetProfile(u.uid); box.appendChild(it); }); }
+  const users = Object.values(dir.users).filter(u => u.uid !== me.uid && u.f !== false && u.nick && (!q || u.nick.toLowerCase().includes(ql) || (u.un && u.un.includes(cleanUn(ql))) || u.uid === q)).sort((a, b) => (b.seen || 0) - (a.seen || 0)).slice(0, 40);
+  if (users.length) { box.appendChild(el('div', 'sec', q ? 'Люди' : 'Люди')); users.forEach(u => { const it = srow(avatar(u, 46), u.nick, (u.un ? '@' + u.un + ' · ' : '') + (u.bio || seenText(u.seen)), 'Написать', () => openDm(u.uid, u.nick)); it.onclick = () => sheetProfile(u.uid); box.appendChild(it); }); }
   const pubs = Object.values(dir.chats).filter(e => !chats[e.id] && (!q || (e.name || '').toLowerCase().includes(ql) || (e.desc || '').toLowerCase().includes(ql) || e.id === ql)).slice(0, 40);
   if (pubs.length) { box.appendChild(el('div', 'sec', 'Каналы и группы')); pubs.forEach(e => { const it = srow(avatar({ e: e.e || (e.kind === 'channel' ? '📢' : '👥'), h: e.h, name: e.name }, 46), e.name, (e.kind === 'channel' ? 'Канал' : 'Группа') + (e.desc ? ' · ' + e.desc : ''), e.kind === 'channel' ? 'Подписаться' : 'Вступить', () => joinByCode(e.id)); it.onclick = () => sheetChatPreview(e); box.appendChild(it); }); }
   if (!box.children.length) { const d = el('div', 'emptyst'); d.appendChild(el('b', null, '🔎')); d.appendChild(el('h3', null, q ? 'Ничего не найдено' : 'Пока никого нет')); d.appendChild(el('div', null, q ? 'Проверьте написание или введите код группы.' : 'Поделитесь ссылкой на свой профиль или создайте канал, и друзья вас найдут.')); box.appendChild(d); }
@@ -1507,18 +1521,21 @@ function renderSearch() {
 /* ---------- профиль (вкладка) ---------- */
 function renderProfilePage() {
   const box = $('#pbodyP'); box.replaceChildren();
-  const d = { nick: me.nick, bio: me.bio || '', e: me.e, h: me.h }, save = el('button', 'btn block', 'Сохранить'); save.disabled = true;
-  const nick = inp('input', d.nick, 'Ник', 20), bio = inp('textarea', d.bio, 'Расскажите о себе', 200);
+  const d = { nick: me.nick, bio: me.bio || '', e: me.e, h: me.h, p: me.p || '', pt: me.pt || '' }, save = el('button', 'btn block', 'Сохранить'); save.disabled = true;
+  const nick = inp('input', d.nick, 'Ник', 20), bio = inp('textarea', d.bio, 'Расскажите о себе', 200), un = inp('input', me.un || '', 'username', 20); un.autocapitalize = 'none'; un.autocomplete = 'off'; un.oninput = () => save.disabled = false;
   const dirtyF = () => { save.disabled = false; };
   const pk = avatarPicker(d, AV_EMO, dirtyF, () => nick.value || '?');
   nick.oninput = () => { dirtyF(); pk.redraw(); }; bio.oninput = dirtyF;
-  const hero = el('div', 'phero'); hero.appendChild(pk.node); box.append(hero, field('Ник', nick), field('О себе', bio));
+  const hero = el('div', 'phero'); hero.appendChild(pk.node); box.append(hero, field('Ник', nick), field('Имя пользователя', un), el('div', 'note2', 'Латиница, цифры и _ (от 4 символов). По нему вас найдут в поиске: @' + (me.un || 'username')), field('О себе', bio));
   save.onclick = () => {
     const n = nick.value.trim(); if (n.length < 2) { toast('Ник — минимум 2 символа'); return; }
-    Object.assign(me, { nick: n, bio: bio.value.trim(), e: d.e, h: d.h }); markDirty('me'); save.disabled = true; toast('Профиль сохранён'); announce(true);
+    const nu = cleanUn(un.value); if (nu && !UN_RE.test(nu)) { toast('Имя пользователя: латиница, цифры, _ ; от 4 до 20 символов, начинается с буквы'); return; }
+    if (nu && unTaken(nu)) { toast('@' + nu + ' уже занято'); return; }
+    Object.assign(me, { nick: n, bio: bio.value.trim(), e: d.e, h: d.h, p: d.p, pt: d.pt, un: nu }); markDirty('me'); save.disabled = true; toast('Профиль сохранён'); announce(true);
   };
   const sv = el('div', 'savebar'); sv.appendChild(save); box.appendChild(sv);
-  box.appendChild(el('div', 'note2', 'ID: ' + me.uid.slice(0, 8) + ' · другие видят ваш ник, аватар и описание'));
+  box.appendChild(el('div', 'note2', (me.un ? '@' + me.un + ' · ' : '') + 'другие видят ваш ник, фото и описание'));
+  box.appendChild(el('div', 'sect', 'Музыка в профиле')); musicEditor(box);
   const gd = el('div', 'group'); gd.appendChild(actionRow(I.gift, 'Алмазы: 💎 ' + fmtN(dia()), 'Подарки можно отправлять в личных чатах', () => {}));
   box.appendChild(el('div', 'sect', 'Мои подарки')); box.appendChild(gd); box.appendChild(giftsRow(me.gifts, me.gl));
   const g = el('div', 'group');
@@ -2578,6 +2595,122 @@ function sheetNft(g, seed, from, mine) {
     body.appendChild(l); body.appendChild(el('p', 'note2', 'Внешний вид подарка уникален: он создаётся из номера сообщения, поэтому у всех выглядит одинаково.'));
   });
 }
+/* ===================== фото профиля, юзернеймы, музыка ===================== */
+const photoOf = uid => uid === me.uid ? me.p : (dir.users[uid] || {}).p;
+async function readPhoto(file) {
+  const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }), s = Math.min(bmp.width, bmp.height), sx = (bmp.width - s) / 2, sy = (bmp.height - s) / 2;
+  const mk = (size, q) => { const c = document.createElement('canvas'); c.width = c.height = size; c.getContext('2d').drawImage(bmp, sx, sy, s, s, 0, 0, size, size); return c.toDataURL('image/jpeg', q); };
+  const big = mk(200, .82); let tiny = '';
+  for (const [sz, q] of [[80, .62], [72, .58], [64, .55], [56, .5], [48, .5], [40, .45]]) { const t = mk(sz, q); if (t.length <= 3000) { tiny = t; break; } }
+  return { p: big, pt: tiny || mk(32, .4) };
+}
+const cleanUn = s => String(s || '').trim().replace(/^@/, '').toLowerCase();
+const UN_RE = /^[a-z][a-z0-9_]{3,19}$/;
+const unTaken = un => Object.values(dir.users).some(u => u.un === un && u.uid !== me.uid);
+function cleanMu(o) {
+  if (!o || typeof o !== 'object' || typeof o.u !== 'string' || !OKURL.test(o.u) || o.u.length > 300) return null;
+  return { t: clip(o.t || '', 60), u: o.u, x: Math.floor(+o.x) || 0, s: o.s === 'file' ? 'file' : 'url' };
+}
+
+/* ---- музыка профиля ---- */
+function musicCard(mu, own) {
+  const w = el('div', 'mcard'), cov = el('div', 'mcov', '🎵'), t = el('div', 'mtx'), btn = el('button', 'mplay', '▶'), bar = el('div', 'mbar'), fill = el('i'); bar.appendChild(fill);
+  t.append(el('b', null, mu.t || 'Музыка'), el('small', null, own ? 'Музыка вашего профиля' : 'Музыка профиля'), bar); w.append(cov, t, btn);
+  let au = null, ready = false;
+  const stop = () => { if (au) { au.pause(); btn.textContent = '▶'; w.classList.remove('on'); } };
+  btn.onclick = async e => {
+    e.stopPropagation();
+    if (au && !au.paused) { stop(); return; }
+    if (window.__pa && window.__pa !== stop) window.__pa();
+    try {
+      if (!au) {
+        au = new Audio(); au.preload = 'auto'; au.loop = true;
+        au.ontimeupdate = () => { if (au.duration) fill.style.width = au.currentTime / au.duration * 100 + '%'; };
+        au.onerror = () => { stop(); toast('Не удалось включить музыку' + (mu.s === 'file' ? ': владелец давно не был в сети' : '')); au = null; };
+        if (mu.u.startsWith(NTFY)) { const r = await mfetch(mu.u); au.src = URL.createObjectURL(await r.blob()); } else au.src = mu.u;
+      }
+      await au.play(); btn.textContent = '⏸'; w.classList.add('on'); window.__pa = stop;
+    } catch { toast('Не удалось включить музыку'); au = null; btn.textContent = '▶'; }
+  };
+  new MutationObserver((_, o) => { if (!document.body.contains(w)) { if (au) au.pause(); o.disconnect(); } }).observe(document.body, { childList: true, subtree: true });
+  return w;
+}
+function sheetMusicLink() {
+  openSheet('Музыка по ссылке', (body, close) => {
+    body.appendChild(el('p', 'note2', 'Вставьте прямую ссылку на аудиофайл (MP3, M4A, OGG), которая начинается с https://. Такая ссылка не пропадает со временем.'));
+    const t = inp('input', '', 'Название', 60), u = inp('input', '', 'https://…/song.mp3', 300); u.type = 'url';
+    body.append(field('Название', t), field('Ссылка', u));
+    const go = el('button', 'btn block', 'Добавить'); body.appendChild(go);
+    go.onclick = () => {
+      const url = u.value.trim(); if (!/^https:\/\/\S+$/.test(url)) { toast('Ссылка должна начинаться с https://'); return; }
+      me.mu = { t: t.value.trim() || decodeURIComponent((url.split('?')[0].split('/').pop() || 'Музыка').replace(/\.[a-z0-9]+$/i, '')), u: url, s: 'url', x: 0 };
+      markDirty('me'); announce(true); close(); renderProfilePage(); toast('Музыка добавлена');
+    };
+  });
+}
+async function uploadMusic(file) {
+  if (file.size > 8 * 1024 * 1024) { toast('Файл больше 8 МБ'); return; }
+  toast('Загружаю музыку…');
+  try {
+    const q = new URLSearchParams({ t: me.nick, tags: ['dir', 'dm', ...profTags()].join(','), f: 'music-' + Date.now() + '.' + ((file.name.match(/\.([a-z0-9]{2,4})$/i) || [])[1] || 'mp3'), m: 'music' });
+    const r = await fetch(`${NTFY}/${dirTopic}?${q}`, { method: 'PUT', body: file }); if (!r.ok) throw 0;
+    const j = await r.json(), a = j.attachment; if (!a || !a.url) throw 0;
+    cachePut(a.url, file);
+    me.mu = { t: file.name.replace(/\.[a-z0-9]+$/i, '').slice(0, 60), u: a.url, s: 'file', x: a.expires || (nowS() + 10800) };
+    markDirty('me'); announce(true); renderProfilePage(); toast('Музыка добавлена');
+  } catch { toast('Не удалось загрузить файл. Попробуйте ссылку на MP3'); }
+}
+async function refreshMusic() {                 // вложения на сервере живут ~3 часа — продлеваем, пока владелец заходит
+  const mu = me.mu; if (!mu || mu.s !== 'file' || mu.x * 1000 - Date.now() > 45 * 60e3) return;
+  try {
+    const bl = await (await mfetch(mu.u)).blob();
+    const q = new URLSearchParams({ t: me.nick, tags: ['dir', 'dm', ...profTags()].join(','), f: 'music-' + Date.now() + '.mp3', m: 'music' });
+    const r = await fetch(`${NTFY}/${dirTopic}?${q}`, { method: 'PUT', body: bl }); const a = (await r.json()).attachment; if (!a) return;
+    cachePut(a.url, bl); me.mu = { ...mu, u: a.url, x: a.expires || (nowS() + 10800) }; markDirty('me'); announce(true);
+  } catch {}
+}
+function musicEditor(box) {
+  const g = el('div', 'group2');
+  if (me.mu) {
+    g.appendChild(musicCard(me.mu, true));
+    const del = el('button', 'btn sec2 sm', 'Убрать музыку'); del.onclick = () => { me.mu = null; markDirty('me'); announce(true); renderProfilePage(); }; g.appendChild(del);
+  } else {
+    g.appendChild(el('p', 'note2', 'Музыку из профиля можно послушать, открыв ваш профиль.'));
+    const r = el('div', 'btnrow'), f = document.createElement('input'); f.type = 'file'; f.accept = 'audio/*,.mp3,.m4a,.ogg,.wav'; f.hidden = true; f.onchange = () => { if (f.files[0]) uploadMusic(f.files[0]); };
+    const a = el('button', 'btn sec2', '🎵 Файл'), b = el('button', 'btn sec2', '🔗 Ссылка'); a.onclick = () => f.click(); b.onclick = sheetMusicLink; r.append(a, b, f); g.appendChild(r);
+  }
+  box.appendChild(g);
+}
+
+/* ---- красивый профиль ---- */
+function sheetProfile(uid) {
+  const isMe = uid === me.uid, u = isMe ? me : uInfo(uid), nick = u.nick || (chats['dm:' + uid] && chats['dm:' + uid].name) || 'Пользователь';
+  openSheet('', (body, close) => {
+    const h = Number.isFinite(+u.h) ? +u.h : hueOf(nick);
+    const ban = el('div', 'pbanner'); ban.style.background = `radial-gradient(circle at 20% 20%,hsla(${(h + 40) % 360},90%,70%,.55),transparent 55%),linear-gradient(135deg,hsl(${h} 70% 48%),hsl(${(h + 55) % 360} 70% 30%))`;
+    const sp = el('div', 'pbpat'); ban.appendChild(sp);
+    const pav = el('div', 'pav'); pav.appendChild(avatar({ e: u.e, h: u.h, name: nick, p: isMe ? me.p : u.p }, 108));
+    const main = el('div', 'pmain'); main.appendChild(el('h2', null, nick));
+    if (u.un) { const un = el('button', 'pun', '@' + u.un); un.title = 'Скопировать'; un.onclick = () => copyText('@' + u.un); main.appendChild(un); }
+    main.appendChild(el('div', 'pst', isMe ? 'это вы' : seenText(u.seen)));
+    if (u.bio) main.appendChild(el('p', 'pbio', u.bio));
+    body.append(ban, pav, main);
+    const acts = el('div', 'pacts');
+    if (!isMe) {
+      const w = el('button', 'btn', '💬 Написать'); w.onclick = () => { close(); openDm(uid, nick); }; acts.appendChild(w);
+      const gf = el('button', 'btn sec2', '🎁 Подарить'); gf.onclick = () => { close(); openDm(uid, nick); setTimeout(() => sheetGifts(uid), 150); }; acts.appendChild(gf);
+    } else { const b = el('button', 'btn', '✏️ Редактировать'); b.onclick = () => { close(); showPage('profile'); }; acts.appendChild(b); }
+    body.appendChild(acts);
+    const mu = cleanMu(isMe ? me.mu : u.mu); if (mu) { body.appendChild(el('div', 'sect', 'Музыка')); body.appendChild(musicCard(mu, false)); }
+    const gl = (isMe ? me.gl : u.gl) || [], cnt = Object.values((isMe ? me.gifts : u.g) || {}).reduce((s, x) => s + x, 0);
+    body.appendChild(el('div', 'sect', 'Подарки' + (cnt ? ' · ' + cnt : ''))); body.appendChild(giftsRow(isMe ? me.gifts : u.g, gl));
+    if (!isMe) {
+      const bl = blocked.has(uid), b = el('button', 'btn sec2 block', bl ? 'Разблокировать' : 'Заблокировать'); b.style.marginTop = '12px';
+      b.onclick = () => { if (bl) blocked.delete(uid); else blocked.add(uid); markDirty('blocked'); close(); toast(bl ? 'Разблокирован' : 'Заблокирован: его сообщения вам не придут'); };
+      body.appendChild(b);
+    }
+  });
+}
 async function shrinkImage(file) {
   if (file.type === 'image/gif' || file.size < 450 * 1024) return null;
   try {
@@ -3101,7 +3234,7 @@ function renderMsg(c, m) {
   const mine = m.u === me.uid, names = c.kind === 'group', first = pv.u !== m.u || m.t - pv.t > 300;
   pv.u = m.u; pv.t = m.t;
   const row = el('div', 'row' + (mine ? ' mine' : '') + (first ? ' first' : ''));
-  const who = { e: m.a, h: m.h, name: m.n };
+  const who = { e: m.a, h: m.h, name: m.n, p: photoOf(m.u) };
   if (!mine && names) {
     if (first) { const av = avatar(who, 34); if (m.u) { av.classList.add('clk'); av.onclick = () => sheetProfile(m.u); } row.appendChild(av); } else row.appendChild(el('div', 'av sp'));
   }
