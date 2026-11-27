@@ -482,6 +482,27 @@ input.sw:checked{background:var(--a1)} input.sw:checked::after{transform:transla
 @media(prefers-reduced-motion:reduce){.stke{animation:none!important}}
 .bubble.media.hascap .t{position:static!important;background:none!important;color:inherit;opacity:.7;text-align:right;padding:0 10px 5px;box-shadow:none;backdrop-filter:none}
 .bubble.media.hascap{padding-bottom:0}
+
+/* коллекционные подарки */
+.nft{position:relative;width:var(--w,168px);aspect-ratio:3/4;border-radius:16px;overflow:hidden;container-type:inline-size;cursor:pointer;
+  background:radial-gradient(circle at 50% 40%,var(--b1),var(--b2) 88%);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 8px 22px rgba(0,0,0,.35);text-align:center}
+.nft .npat span{position:absolute;transform:translate(-50%,-50%);line-height:1}
+.nft .nmd{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:36cqw;line-height:1;animation:nbob 3.4s ease-in-out infinite}
+@keyframes nbob{50%{transform:translate(-50%,-54%)}}
+.nft .nnum{position:absolute;top:6px;right:8px;font-size:7cqw;font-weight:700;opacity:.9;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.nft .nfoot{position:absolute;left:0;right:0;bottom:0;padding:10cqw 4px 6cqw;background:linear-gradient(transparent,rgba(0,0,0,.55));display:flex;flex-direction:column;gap:1px}
+.nft .nfoot b{font-size:9.5cqw}.nft .nfoot small{font-size:6.8cqw;opacity:.85}
+.nft::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);opacity:0}
+.nft.t1::after,.nft.t2::after,.nft.t3::after{opacity:1;animation:nshine 4.5s ease-in-out infinite}.nft.t3::after{animation-duration:3s}
+@keyframes nshine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.nft.t2{box-shadow:inset 0 0 0 2px #c9a2ff,0 8px 26px rgba(160,100,255,.45)}.nft.t3{box-shadow:inset 0 0 0 2px #ffd65c,0 8px 30px rgba(255,200,80,.55)}
+.nft.t1{box-shadow:inset 0 0 0 2px rgba(120,190,255,.8),0 8px 22px rgba(0,0,0,.35)}
+.bubble.giftb{padding:10px 10px 8px;text-align:center}.bubble.giftb .nft{margin:6px auto 4px}
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;justify-items:center}
+.nftbig{display:flex;justify-content:center;margin:6px 0 12px}
+.nattr{display:grid;gap:6px;margin-bottom:8px}.nrow{display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;padding:9px 12px;border-radius:12px;background:var(--glass);font-size:14px}.nrow span{opacity:.7}.nrow small{opacity:.7}
+.tn.t1{color:#7cc4ff}.tn.t2{color:#c9a2ff}.tn.t3{color:#ffd65c}
+@media(prefers-reduced-motion:reduce){.nft .nmd,.nft::after{animation:none!important}}
 /* ===== Строгий вид: плоские цвета, один акцент, без свечения и градиентов ===== */
 :root{--bg:#0e1621;--panel:#17212b;--panel2:#1e2c3a;--text:#e8edf2;--muted:#7f91a4;--line:#0b121a;
   --a1:#2f81d6;--a2:#6ab3f3;--danger:#e5626f;--grad:var(--a1);--glass:var(--panel2);--glass-strong:var(--panel);--stroke:rgba(255,255,255,.08);
@@ -1184,7 +1205,7 @@ function ingestDir(raw, p) {
     if (!b.uid || b.uid === me.uid || b.uid !== p.u) return;
     const u = dir.users[b.uid] || (dir.users[b.uid] = { uid: b.uid });
     if ((u.t2 || 0) > raw.time) return;
-    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), t2: raw.time, nt: raw.time });
+    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), gl: cleanGl(b.gl), t2: raw.time, nt: raw.time });
     u.seen = Math.max(u.seen || 0, raw.time);
   } else if (p.tags.includes('dc')) {
     if (!b.id || !b.owner || b.owner !== p.u) return;
@@ -1208,7 +1229,7 @@ async function announce(force) {
   if (!force && Date.now() - last < 3600e3) return;
   store.set('dc.ann', String(Date.now()));
   try {
-    await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, nick: me.nick, bio: me.bio, e: me.e, h: me.h, f: me.f !== false, g: cleanGifts(me.gifts) }), ['dir', 'du']);
+    await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, nick: me.nick, bio: me.bio, e: me.e, h: me.h, f: me.f !== false, g: cleanGifts(me.gifts), gl: cleanGl(me.gl) }), ['dir', 'du']);
     for (const c of Object.values(chats)) if (c.owner === me.uid && c.kind !== 'dm') await publishMeta(c);
   } catch {}
 }
@@ -1313,7 +1334,7 @@ function sheetProfile(uid) {
     const hero = el('div', 'shero'); hero.appendChild(avatar({ e: u.e, h: u.h, name: nick }, 96));
     hero.append(el('h3', null, nick), el('small', null, isMe ? 'это вы' : seenText(u.seen)));
     if (u.bio) hero.appendChild(el('p', null, u.bio)); body.appendChild(hero);
-    body.appendChild(el('div', 'sect', 'Подарки')); body.appendChild(giftsRow(isMe ? me.gifts : u.g));
+    body.appendChild(el('div', 'sect', 'Подарки')); body.appendChild(giftsRow(isMe ? me.gifts : u.g, isMe ? me.gl : u.gl));
     const g = el('div', 'group');
     const idr = actionRow(I.copy, 'ID: ' + uid.slice(0, 8), 'Нажмите, чтобы скопировать', () => copyText(uid)); g.appendChild(idr);
     body.appendChild(g);
@@ -1499,7 +1520,7 @@ function renderProfilePage() {
   const sv = el('div', 'savebar'); sv.appendChild(save); box.appendChild(sv);
   box.appendChild(el('div', 'note2', 'ID: ' + me.uid.slice(0, 8) + ' · другие видят ваш ник, аватар и описание'));
   const gd = el('div', 'group'); gd.appendChild(actionRow(I.gift, 'Алмазы: 💎 ' + fmtN(dia()), 'Подарки можно отправлять в личных чатах', () => {}));
-  box.appendChild(el('div', 'sect', 'Мои подарки')); box.appendChild(gd); box.appendChild(giftsRow(me.gifts));
+  box.appendChild(el('div', 'sect', 'Мои подарки')); box.appendChild(gd); box.appendChild(giftsRow(me.gifts, me.gl));
   const g = el('div', 'group');
   g.appendChild(toggleRow('Показывать меня в поиске', 'Иначе вас найдут только по ссылке', me.f !== false, v => { me.f = v; markDirty('me'); announce(true); }));
   g.appendChild(toggleRow('Звук сообщений', null, soundOn, v => { soundOn = v; store.set('sound', v ? '1' : '0'); }));
@@ -2382,9 +2403,16 @@ const GIFTS = [
 const giftOf = id => GIFTS.find(g => g.id === id);
 const dia = () => Math.max(0, Math.floor(+me.d || 0));
 const fmtN = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+function cleanGl(a) { return (Array.isArray(a) ? a : []).filter(x => x && giftOf(x.g) && /^[A-Za-z0-9_-]{6,24}$/.test(x.id)).slice(-24).map(x => ({ g: x.g, id: x.id, f: clip(x.f, 16) })); }
 function cleanGifts(o) { const r = {}; if (o && typeof o === 'object') for (const g of GIFTS) { const n = Math.floor(+o[g.id]); if (n > 0) r[g.id] = Math.min(n, 99999); } return r; }
-function giftsRow(map) {
-  const w = el('div', 'gifts'), ks = GIFTS.filter(g => map && map[g.id] > 0);
+function giftsRow(map, gl) {
+  const w = el('div', 'gifts'), list = (gl || []).filter(x => giftOf(x.g));
+  if (list.length) {
+    w.classList.add('ngrid');
+    for (const x of list.slice().reverse()) { const g = giftOf(x.g), c = nftCard(g, x.id, 104); c.onclick = () => sheetNft(g, x.id, x.f, false); w.appendChild(c); }
+    return w;
+  }
+  const ks = GIFTS.filter(g => map && map[g.id] > 0);
   if (!ks.length) { w.appendChild(el('div', 'note2', 'Пока нет подарков')); return w; }
   for (const g of ks) { const c = el('div', 'gchip'); c.append(el('span', 'ge', g.e), el('small', null, g.n + (map[g.id] > 1 ? ' ×' + map[g.id] : ''))); w.appendChild(c); }
   return w;
@@ -2394,15 +2422,15 @@ function onGift(c, m) {                       // получили подарок
   const g = giftOf(parseGift(m)); if (!g) return;
   me.gk = me.gk || []; if (me.gk.includes(m.id)) return;
   me.gk.push(m.id); if (me.gk.length > 400) me.gk.shift();
-  me.gifts = cleanGifts(me.gifts); me.gifts[g.id] = (me.gifts[g.id] || 0) + 1; markDirty('me'); announce(true);
+  me.gifts = cleanGifts(me.gifts); me.gifts[g.id] = (me.gifts[g.id] || 0) + 1; me.gl = (me.gl || []).concat({ g: g.id, id: m.id, f: clip(m.n, 16) }).slice(-60); markDirty('me'); announce(true);
   if (Math.abs(nowS() - m.t) < 60) toast('🎁 ' + m.n + ' подарил(а) вам: ' + g.n);
 }
 function parseGift(m) { try { return JSON.parse(m.x).g; } catch { return ''; } }
 function giftBody(m, b) {
   const g = giftOf(parseGift(m)), mine = m.u === me.uid; b.classList.add('giftb');
   if (!g) { b.textContent = '🎁 Подарок'; return; }
-  const big = el('div', 'gbig', g.e), t = el('div', 'gtt', mine ? 'Вы подарили' : 'Вам подарили'), n = el('div', 'gnm', g.n), p = el('div', 'gpr', '💎 ' + fmtN(g.p));
-  b.append(big, t, n, p);
+  const c = nftCard(g, m.id, 176); c.onclick = e => { e.stopPropagation(); sheetNft(g, m.id, mine ? '' : m.n, false); };
+  b.append(el('div', 'gtt', mine ? 'Вы подарили' : 'Вам подарили'), c, el('div', 'gpr', '💎 ' + fmtN(g.p)));
 }
 function sheetGifts(uid) {
   const c = chats['dm:' + uid]; if (!c) return;
@@ -2504,6 +2532,46 @@ function mediaCompose(files) {
     cancel.onclick = () => close();
     send.onclick = () => { const l = list.slice(), text = cap.value.trim(); close(); handleFiles(l, text); };
     cap.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !matchMedia('(pointer:coarse)').matches) { e.preventDefault(); send.click(); } });
+  });
+}
+/* ===================== коллекционные подарки ===================== */
+const NFT_BACK = [
+  { n: 'Океан', c: ['#2f7bf0', '#0a2766'], w: 20 }, { n: 'Закат', c: ['#ff9a5c', '#8a2a64'], w: 18 }, { n: 'Мята', c: ['#40e0b4', '#0a5566'], w: 16 },
+  { n: 'Малина', c: ['#ff5fa2', '#6a1458'], w: 14 }, { n: 'Фиалка', c: ['#a070ff', '#2a1668'], w: 12 }, { n: 'Золото', c: ['#ffd65c', '#8a5208'], w: 8 },
+  { n: 'Графит', c: ['#6a7384', '#12161e'], w: 6 }, { n: 'Рубин', c: ['#ff3b4d', '#46091a'], w: 4 }, { n: 'Лёд', c: ['#c4f5ff', '#3677d4'], w: 3 },
+  { n: 'Галактика', c: ['#8a40ff', '#04051a'], w: 2 }, { n: 'Хром', c: ['#f0f4fb', '#566478'], w: 1 }];
+const NFT_SYM = [['✨', 22], ['❄️', 18], ['🌸', 16], ['⭐', 14], ['💫', 10], ['🍀', 8], ['🔥', 6], ['🫧', 4], ['🎵', 2]];
+const NFT_MODEL = [{ n: 'Классика', f: '', w: 40 }, { n: 'Неон', f: 'drop-shadow(0 0 10px #7cf) drop-shadow(0 0 22px #5af)', w: 22 }, { n: 'Позолота', f: 'sepia(1) saturate(2.6) hue-rotate(-15deg) drop-shadow(0 0 8px #fc4)', w: 14 }, { n: 'Инверсия', f: 'hue-rotate(150deg) saturate(1.5)', w: 14 }, { n: 'Призрак', f: 'grayscale(1) brightness(1.5) drop-shadow(0 0 12px #fff)', w: 6 }, { n: 'Радуга', f: 'hue-rotate(75deg) saturate(2) drop-shadow(0 0 10px #f6f)', w: 4 }];
+function nftRand(seed) {                       // детерминированный генератор из id сообщения
+  let h = 1779033703 ^ seed.length; for (let i = 0; i < seed.length; i++) { h = Math.imul(h ^ seed.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; }
+  let a = (h = Math.imul(h ^ h >>> 16, 2246822507) ^ Math.imul(h ^ h >>> 13, 3266489909)) >>> 0;
+  return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+function pickW(list, r, wf) { const tot = list.reduce((s, x) => s + wf(x), 0); let v = r * tot; for (const x of list) { v -= wf(x); if (v < 0) return [x, wf(x) / tot]; } const x = list[list.length - 1]; return [x, wf(x) / tot]; }
+function nftAttrs(gid, seed) {
+  const R = nftRand(gid + ':' + seed), [bk, pb] = pickW(NFT_BACK, R(), x => x.w), [sy, ps] = pickW(NFT_SYM, R(), x => x[1]), [md, pm] = pickW(NFT_MODEL, R(), x => x.w);
+  const num = 1 + Math.floor(R() * 9999), p = pb * ps * pm;
+  const tier = p < .00043 ? 3 : p < .00114 ? 2 : p < .003 ? 1 : 0;
+  return { bk, sy: sy[0], md, num, pb, ps: ps, pm, tier, tn: ['Обычный', 'Редкий', 'Эпический', 'Легендарный'][tier] };
+}
+function nftCard(g, seed, w, who) {
+  const a = nftAttrs(g.id, seed), c = el('div', 'nft t' + a.tier); c.style.setProperty('--w', (w || 168) + 'px'); c.style.setProperty('--b1', a.bk.c[0]); c.style.setProperty('--b2', a.bk.c[1]);
+  const R = nftRand('pat' + seed), pat = el('div', 'npat');
+  [[27, 6, .5], [40, 9, .4], [52, 13, .3]].forEach(([r, n, al], ri) => { for (let i = 0; i < n; i++) { const ang = (i / n + ri * .07) * 6.2832 + R() * .25, s = el('span', null, a.sy); s.style.left = (50 + Math.cos(ang) * r * 1.05) + '%'; s.style.top = (40 + Math.sin(ang) * r * 1.05) + '%'; s.style.opacity = al; s.style.fontSize = (11 - ri * 2) / 168 * 100 + 'cqw'; pat.appendChild(s); } });
+  const m = el('div', 'nmd', g.e); if (a.md.f) m.style.filter = a.md.f;
+  c.append(pat, m, el('div', 'nnum', '№ ' + a.num), el('div', 'nfoot'));
+  const ft = c.lastChild; ft.append(el('b', null, g.n), el('small', null, a.tn));
+  c.__a = a; return c;
+}
+function sheetNft(g, seed, from, mine) {
+  const a = nftAttrs(g.id, seed);
+  openSheet('Коллекционный подарок', (body, close) => {
+    const wrap = el('div', 'nftbig'); wrap.appendChild(nftCard(g, seed, Math.min(260, innerWidth - 90))); body.appendChild(wrap);
+    const rows = [['Модель', a.md.n, a.pm], ['Фон', a.bk.n, a.pb], ['Узор', a.sy, a.ps]], l = el('div', 'nattr');
+    for (const [k, v, p] of rows) { const r = el('div', 'nrow'); r.append(el('span', null, k), el('b', null, v), el('small', null, (p * 100 < 1 ? (p * 100).toFixed(1) : Math.round(p * 100)) + '%')); l.appendChild(r); }
+    const r2 = el('div', 'nrow'); r2.append(el('span', null, 'Редкость'), el('b', 'tn t' + a.tier, a.tn), el('small', null, '')); l.appendChild(r2);
+    if (from) { const r3 = el('div', 'nrow'); r3.append(el('span', null, mine ? 'Кому' : 'От'), el('b', null, from), el('small', null, '')); l.appendChild(r3); }
+    body.appendChild(l); body.appendChild(el('p', 'note2', 'Внешний вид подарка уникален: он создаётся из номера сообщения, поэтому у всех выглядит одинаково.'));
   });
 }
 async function shrinkImage(file) {
