@@ -1064,7 +1064,7 @@ const curChat = () => chats[cur] || null;
 const canPost = c => !!c && (c.kind !== 'channel' || c.owner === me.uid);
 async function sendTextTo(c, text, flags) {
   if (!c || !canPost(c)) return false;
-  try { await ensureTopic(c); const m = await pubJSON(c.topic, text, flags || []); ingest(m, c.id); return true; }
+  try { await ensureTopic(c); const m = await pubJSON(c.topic, text, flags || []); ingest(m, c.id); return m; }
   catch { toast('Не удалось отправить. Проверьте интернет'); return false; }
 }
 const sendText = async (text, flags) => { const c = curChat(), ok = await sendTextTo(c, text, [...(flags || []), ...replyFlags(c)]); if (ok) clearReply(); return ok; };
@@ -1205,7 +1205,7 @@ function ingestDir(raw, p) {
     if (!b.uid || b.uid === me.uid || b.uid !== p.u) return;
     const u = dir.users[b.uid] || (dir.users[b.uid] = { uid: b.uid });
     if ((u.t2 || 0) > raw.time) return;
-    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), gl: cleanGl(b.gl), t2: raw.time, nt: raw.time });
+    Object.assign(u, { nick: clip(b.nick, 24), bio: clip(b.bio, 200), e: clip(b.e, 8), h: Number.isFinite(+b.h) ? +b.h : u.h, f: b.f !== false, g: cleanGifts(b.g), gl: mergeGl(u.gl, cleanGl(b.gl)), t2: raw.time, nt: raw.time });
     u.seen = Math.max(u.seen || 0, raw.time);
   } else if (p.tags.includes('dc')) {
     if (!b.id || !b.owner || b.owner !== p.u) return;
@@ -1226,7 +1226,7 @@ async function publishMeta(c) {
 }
 async function announce(force) {
   const last = +store.get('dc.ann', 0);
-  if (!force && Date.now() - last < 3600e3) return;
+  if (!force && Date.now() - last < (me.gl && me.gl.length ? 600e3 : 3600e3)) return;
   store.set('dc.ann', String(Date.now()));
   try {
     await pubJSON(dirTopic, JSON.stringify({ uid: me.uid, nick: me.nick, bio: me.bio, e: me.e, h: me.h, f: me.f !== false, g: cleanGifts(me.gifts), gl: cleanGl(me.gl) }), ['dir', 'du']);
@@ -2404,6 +2404,10 @@ const giftOf = id => GIFTS.find(g => g.id === id);
 const dia = () => Math.max(0, Math.floor(+me.d || 0));
 const fmtN = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 function cleanGl(a) { return (Array.isArray(a) ? a : []).filter(x => x && giftOf(x.g) && /^[A-Za-z0-9_-]{6,24}$/.test(x.id)).slice(-24).map(x => ({ g: x.g, id: x.id, f: clip(x.f, 16) })); }
+function mergeGl(a, b) { const seen = new Set(), r = []; for (const x of [...(a || []), ...(b || [])]) if (x && !seen.has(x.id)) { seen.add(x.id); r.push(x); } return r.slice(-60); }
+function rememberGiven(uid, gid, id) {          // отправитель сразу знает, что подарил
+  const u = dir.users[uid] || (dir.users[uid] = { uid }); u.gl = mergeGl(u.gl, [{ g: gid, id, f: clip(me.nick, 16) }]); markDirty('dir');
+}
 function cleanGifts(o) { const r = {}; if (o && typeof o === 'object') for (const g of GIFTS) { const n = Math.floor(+o[g.id]); if (n > 0) r[g.id] = Math.min(n, 99999); } return r; }
 function giftsRow(map, gl) {
   const w = el('div', 'gifts'), list = (gl || []).filter(x => giftOf(x.g));
@@ -2444,7 +2448,7 @@ function sheetGifts(uid) {
         if (dia() < g.p) { toast('Не хватает алмазов'); return; }
         close();
         const ok = await sendTextTo(c, JSON.stringify({ g: g.id }), ['gift']);
-        if (ok) { me.d = dia() - g.p; markDirty('me'); toast('Подарок отправлен: ' + g.e); if (cur !== c.id) openChat(c.id); } else toast('Не удалось отправить подарок');
+        if (ok) { rememberGiven(uid, g.id, ok.id); me.d = dia() - g.p; markDirty('me'); toast('Подарок отправлен: ' + g.e); if (cur !== c.id) openChat(c.id); } else toast('Не удалось отправить подарок');
       }; grid.appendChild(t);
     }
     body.appendChild(grid);
