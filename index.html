@@ -521,6 +521,36 @@ input.sw:checked{background:var(--a1)} input.sw:checked::after{transform:transla
 .mplay{width:42px;height:42px;border-radius:50%;border:0;background:var(--a1);color:#fff;font-size:16px;cursor:pointer;flex:none}
 .group2{display:grid;gap:8px;margin:6px 0 10px}
 .av{background-size:cover}
+
+/* галочки */
+.tk{display:inline-flex;margin-left:4px;vertical-align:-1px;opacity:.75}.tk.rd{opacity:1;color:#53d8ff}
+.row:not(.mine) .tk{display:none}
+/* апгрейд */
+.upg{position:relative;width:100%;max-width:460px;margin:0 auto;padding:12px 16px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:100%;color:#fff;background:radial-gradient(ellipse at 50% 0,#1d2350,#0b0f27 70%)}
+.ubal{font-weight:700;font-size:13px;opacity:.8;align-self:flex-end}
+.uwheel{position:relative;width:min(78vw,330px);aspect-ratio:1}.uwheel svg{width:100%;height:100%;overflow:visible}
+.utk line{stroke:rgba(255,255,255,.22);stroke-width:1.4}.utrack{fill:none;stroke:rgba(255,255,255,.1);stroke-width:22}
+.uarc{fill:none;stroke:#f2c94c;stroke-width:22;filter:drop-shadow(0 0 10px rgba(242,201,76,.6))}.uin{fill:#12163a;stroke:rgba(255,255,255,.08);stroke-width:2}
+.uptr{fill:#ffe082;filter:drop-shadow(0 0 8px rgba(255,224,130,.8))}
+.uctr{position:absolute;inset:0;display:grid;place-items:center;font-size:min(32vw,130px);pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}.uwheel.spin .uctr{animation:nbob 1.2s ease-in-out infinite}
+.uch{font-size:17px;opacity:.95}.uch b{font-size:32px;color:#f2c94c;margin-left:6px}
+.ucards{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;width:100%}
+.ucard{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04));color:#fff;text-align:left;font:inherit;min-height:84px;cursor:pointer;min-width:0}
+.ucard.to{border-color:rgba(242,201,76,.55);cursor:default}.ucard small{opacity:.75;font-size:12px}
+.uit{display:flex;align-items:center;gap:8px}.uie{font-size:34px;line-height:1}.uit b{font-size:15px}.upr{font-weight:800;font-size:17px;color:#fff}.ucard.to .upr{color:#f2c94c}.uem{font-size:13px;opacity:.7;margin-top:6px}
+.uarr{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#12163a;border:1px solid rgba(255,255,255,.2)}
+.uchips{display:flex;gap:8px;width:100%;flex-wrap:wrap}.uchip{padding:10px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;font:700 17px system-ui,sans-serif;cursor:pointer}
+.uchip:active{transform:scale(.95)}.uamts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}.sheet .uchip{background:var(--glass);border-color:var(--stroke);color:inherit}
+.uslw{display:flex;align-items:center;gap:12px;width:100%}.umult{flex:none;min-width:84px;text-align:center;padding:8px 12px;border-radius:999px;background:#f2c94c;color:#14162b;font-weight:800;font-size:17px}
+.urng{flex:1;accent-color:#f2c94c;height:28px}
+.utiles{display:flex;gap:10px;overflow-x:auto;width:100%;padding:6px 2px 10px;scrollbar-width:none}.utiles::-webkit-scrollbar{display:none}
+.utile{flex:none;width:70px;height:78px;border-radius:16px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-family:inherit}
+.utile .uie{font-size:34px}.utile small{font-weight:800;font-size:13px}.utile.on{border:2px solid #f2c94c;background:rgba(242,201,76,.18)}
+.ugo{width:100%;padding:16px;border-radius:18px;border:0;background:linear-gradient(180deg,#ffe08a,#f2c94c);color:#1a1530;font:800 20px system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(242,201,76,.35)}
+.ugo:disabled{opacity:.45;box-shadow:none}.ugo:active:not(:disabled){transform:scale(.98)}
+.ures{position:absolute;inset:0;background:rgba(6,8,22,.88);display:grid;place-items:center;padding:20px;z-index:5;backdrop-filter:blur(4px)}
+.ucardres{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;width:100%;max-width:320px}.ucardres h3{margin:0;font-size:22px}.ucardres p{margin:0;opacity:.8}.uburn{font-size:90px;animation:nbob 1.5s ease-in-out infinite}
+.upg>*{flex-shrink:0}.uwheel{width:min(70vw,300px,36dvh)}.upg{gap:10px}
 /* ===== Строгий вид: плоские цвета, один акцент, без свечения и градиентов ===== */
 :root{--bg:#0e1621;--panel:#17212b;--panel2:#1e2c3a;--text:#e8edf2;--muted:#7f91a4;--line:#0b121a;
   --a1:#2f81d6;--a2:#6ab3f3;--danger:#e5626f;--grad:var(--a1);--glass:var(--panel2);--glass-strong:var(--panel);--stroke:rgba(255,255,255,.08);
@@ -1181,6 +1211,7 @@ function ingest(raw, force) {
   if (p.tags.includes('meta')) return ingestMeta(c, raw, p);
   if (p.tags.includes('react')) return ingestReact(c, raw, p);
   if (p.tags.includes('vote')) return ingestVote(c, raw, p);
+  if (p.tags.includes('read')) return ingestRead(c, raw, p);
   if (p.tags.includes('del') || p.tags.includes('edit')) return ingestCtl(c, raw, p);
   if (c.dead && c.dead[raw.id]) return;
   const m = toMsg(raw, p); if (!m) return;
@@ -1194,6 +1225,7 @@ function ingest(raw, force) {
 function afterAdd(c, m, how) {
   const mine = m.u === me.uid, open = cur === c.id && !document.hidden, liveMsg = Math.abs(nowS() - m.t) < 30;
   if (mine || open) c.read = Math.max(c.read || 0, m.t);
+  if (open && !mine) sendReceipt(c);
   if (m.at && !mine && liveMsg && (!m.at.exp || m.at.exp * 1000 > Date.now())) mfetch(m.at.url).catch(() => {});   // сохраняем вложение на устройстве
   if (cur === c.id && view) { if (!visible(c, m)) { /* скрыто */ } else if (how === 'append') appendMsg(c, m); else scheduleRender(c); }
   if (liveMsg && !mine && m.k !== 'sys' && visible(c, m)) {
@@ -1536,10 +1568,11 @@ function renderProfilePage() {
   const sv = el('div', 'savebar'); sv.appendChild(save); box.appendChild(sv);
   box.appendChild(el('div', 'note2', (me.un ? '@' + me.un + ' · ' : '') + 'другие видят ваш ник, фото и описание'));
   box.appendChild(el('div', 'sect', 'Музыка в профиле')); musicEditor(box);
-  const gd = el('div', 'group'); gd.appendChild(actionRow(I.gift, 'Алмазы: 💎 ' + fmtN(dia()), 'Подарки можно отправлять в личных чатах', () => {}));
+  const gd = el('div', 'group'); gd.appendChild(actionRow(I.gift, 'Алмазы: 💎 ' + fmtN(dia()), 'Нажмите, чтобы подарить подарок себе', () => sheetGifts(me.uid)));
   box.appendChild(el('div', 'sect', 'Мои подарки')); box.appendChild(gd); box.appendChild(giftsRow(me.gifts, me.gl));
   const g = el('div', 'group');
   g.appendChild(toggleRow('Показывать меня в поиске', 'Иначе вас найдут только по ссылке', me.f !== false, v => { me.f = v; markDirty('me'); announce(true); }));
+  g.appendChild(toggleRow('Отчёты о прочтении', 'Показывать ✓✓ и видеть, кто прочитал ваши сообщения', !me.nr, v => { me.nr = !v; markDirty('me'); }));
   g.appendChild(toggleRow('Звук сообщений', null, soundOn, v => { soundOn = v; store.set('sound', v ? '1' : '0'); }));
   g.appendChild(toggleRow('Тёмная тема', null, document.documentElement.dataset.theme === 'dark', v => { const t = v ? 'dark' : 'light'; store.set('theme', t); applyTheme(t); }));
   const nsub = !('Notification' in window) ? 'Не поддерживаются этим браузером' : Notification.permission === 'granted' ? 'Включены' : Notification.permission === 'denied' ? 'Запрещены в настройках браузера' : 'Нажмите, чтобы включить';
@@ -1567,6 +1600,7 @@ const GAMES = [
   { id: '2048', name: '2048', emoji: '🔢', desc: 'Складывайте одинаковые плитки', run: g2048 },
   { id: 'memory', name: 'Память', emoji: '🧠', desc: 'Найдите все пары как можно быстрее', run: gMemory },
   { id: 'ttt', name: 'Крестики-нолики', emoji: '❌', desc: 'Выиграйте у компьютера несколько раз подряд', run: gTtt },
+  { id: 'upgrade', name: 'Апгрейд подарков', emoji: '🎰', desc: 'Улучшайте подарки с шансом — рискните и получите дороже', run: gUpgrade, ns: true },
   { id: 'react', name: 'Реакция', emoji: '⚡', desc: 'Жмите, как только станет зелёным', run: gReact }
 ];
 const bestOf = id => +store.get('dc.best.' + id, 0) || 0;
@@ -1577,7 +1611,7 @@ function renderGames() {
     const it = el('div', 'item'); const a = el('div', 'av', g.emoji); a.style.setProperty('--s', '56px');
     a.style.background = `linear-gradient(135deg,hsl(${hueOf(g.id)} 75% 58%),hsl(${(hueOf(g.id) + 45) % 360} 75% 45%))`; it.appendChild(a);
     const b = el('div', 'ibody'); b.appendChild(el('div', 'nm', g.name)); b.appendChild(el('div', 'sub', g.desc)); it.appendChild(b);
-    const best = bestOf(g.id); if (best) it.appendChild(el('span', 'bdg', '🏆 ' + best));
+    const best = g.ns ? 0 : bestOf(g.id); if (best) it.appendChild(el('span', 'bdg', '🏆 ' + best));
     it.onclick = () => openGame(g); box.appendChild(it);
   }
 }
@@ -1588,6 +1622,7 @@ function startGame() {
   if (!gCur) return; if (gCur.stop) { try { gCur.stop(); } catch {} gCur.stop = null; }
   const g = gCur.g, body = $('#gBody'); body.replaceChildren();
   $('#gBest').textContent = bestOf(g.id); $('#gScore').textContent = '0';
+  document.querySelectorAll('#gameView .gsc').forEach(x => x.style.display = g.ns ? 'none' : '');
   const api = {
     score: n => { $('#gScore').textContent = n; },
     over: (sc, label) => {
@@ -2005,6 +2040,106 @@ function gMines(body, api) {
   }
   return () => clearInterval(timer);
 }
+/* ===================== Апгрейд подарков ===================== */
+function upOwned() {            // мои подарки как отдельные предметы
+  const out = [], cnt = {};
+  for (const x of (me.gl || [])) { const g = giftOf(x.g); if (g) { out.push({ type: 'gift', g, id: x.id, legacy: false }); cnt[g.id] = (cnt[g.id] || 0) + 1; } }
+  for (const g of GIFTS) { const n = Math.min(99, ((me.gifts || {})[g.id] || 0) - (cnt[g.id] || 0)); for (let i = 0; i < n; i++) out.push({ type: 'gift', g, id: 'legacy:' + g.id + ':' + i, legacy: true }); }
+  return out;
+}
+function upRemove(it) {
+  me.gifts = cleanGifts(me.gifts);
+  if (!it.legacy) me.gl = (me.gl || []).filter(x => x.id !== it.id);
+  me.gifts[it.g.id] = Math.max(0, (me.gifts[it.g.id] || 0) - 1); if (!me.gifts[it.g.id]) delete me.gifts[it.g.id];
+  markDirty('me');
+}
+function upAdd(g, from) {
+  const id = 'u' + Math.random().toString(36).slice(2, 10);
+  me.gifts = cleanGifts(me.gifts); me.gifts[g.id] = (me.gifts[g.id] || 0) + 1; me.gl = (me.gl || []).concat({ g: g.id, id, f: from || 'Апгрейд' }).slice(-60); markDirty('me');
+  return { type: 'gift', g, id, legacy: false };
+}
+function gUpgrade(body, api) {
+  body.style.justifyContent = 'flex-start'; body.style.overflowY = 'auto'; body.style.touchAction = 'pan-y'; body.style.padding = '0';
+  const root = el('div', 'upg'); body.appendChild(root);
+  const C = 2 * Math.PI * 118, FAST = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let stake = null, tgt = null, busy = false, tl = [], timer = 0;
+  const val = () => !stake ? 0 : stake.type === 'dia' ? stake.v : stake.g.p, pct = x => x.toFixed(1).replace('.', ',') + '%', mul = x => '×' + (Math.round(x * 100) / 100).toString().replace('.', ',');
+  const chance = () => tgt && val() ? Math.min(95, val() / tgt.p * 95) : 0;
+
+  const bal = el('div', 'ubal');
+  const wheel = el('div', 'uwheel');
+  let ticks = ''; for (let i = 0; i < 72; i++) { const a = i * 5 * Math.PI / 180, r1 = 143, r2 = i % 6 ? 147 : 150; ticks += `<line x1="${150 + Math.sin(a) * r1}" y1="${150 - Math.cos(a) * r1}" x2="${150 + Math.sin(a) * r2}" y2="${150 - Math.cos(a) * r2}"/>`; }
+  wheel.innerHTML = `<svg viewBox="0 0 300 300"><g class="utk">${ticks}</g><circle class="utrack" cx="150" cy="150" r="118"/><circle class="uarc" id="uArc" cx="150" cy="150" r="118"/><circle class="uin" cx="150" cy="150" r="100"/><g id="uPtr" style="transform-origin:150px 150px"><path class="uptr" d="M150 258 L137 288 Q150 294 163 288 Z"/></g></svg><div class="uctr" id="uCtr">?</div>`;
+  const arc = wheel.querySelector('#uArc'), ptr = wheel.querySelector('#uPtr'), ctr = wheel.querySelector('#uCtr');
+  const chTxt = el('div', 'uch'), chB = el('b'); chTxt.append('Шанс улучшения ', chB);
+  const from = el('button', 'ucard'), to = el('div', 'ucard to'), arrow = el('div', 'uarr', '→');
+  const cards = el('div', 'ucards'); cards.append(from, arrow, to);
+  const chips = el('div', 'uchips'), slW = el('div', 'uslw'), mult = el('div', 'umult'), sl = document.createElement('input'); sl.type = 'range'; sl.className = 'urng'; slW.append(mult, sl);
+  const tiles = el('div', 'utiles'), go = el('button', 'ugo', '⏫ Улучшить');
+  root.append(bal, wheel, chTxt, cards, chips, slW, tiles, go);
+  const rnd = el('button', 'uchip', '✨'); rnd.onclick = () => { if (busy || !tl.length) return; pick(tl[Math.floor(Math.random() * tl.length)]); };
+  chips.appendChild(rnd);
+  [2, 4, 8].forEach(k => { const b = el('button', 'uchip', '×' + k); b.onclick = () => { if (busy || !tl.length) return; pick(tl.reduce((a, g) => Math.abs(g.p / val() - k) < Math.abs(a.p / val() - k) ? g : a)); }; chips.appendChild(b); });
+
+  function card(box, title, g, sub, empty) {
+    box.replaceChildren(el('small', null, title));
+    if (!g) { box.append(el('div', 'uem', empty || '—')); return; }
+    const r = el('div', 'uit'); r.append(el('span', 'uie', g.e || '💎'), (() => { const t = el('div'); t.append(el('b', null, g.n), el('div', 'upr', sub)); return t; })()); box.appendChild(r);
+  }
+  function pick(g) { tgt = g; update(); }
+  function update() {
+    bal.textContent = 'Алмазы: 💎 ' + fmtN(dia());
+    const v = val(); tl = v ? GIFTS.filter(g => g.p > v * 1.05 && g.p <= v * 95).sort((a, b) => a.p - b.p) : [];
+    if (!tl.includes(tgt)) tgt = tl.length ? tl.reduce((a, g) => Math.abs(g.p / v - 2) < Math.abs(a.p / v - 2) ? g : a) : null;
+    card(from, 'Ваш подарок', stake ? (stake.type === 'dia' ? { e: '💎', n: 'Алмазы' } : stake.g) : null, '💎 ' + fmtN(v), 'Нажмите, чтобы выбрать');
+    card(to, 'Хочу получить', tgt, tgt ? '💎 ' + fmtN(tgt.p) : '', v ? (tl.length ? '' : 'Нет подарков дороже') : 'Сначала выберите ставку');
+    ctr.textContent = tgt ? tgt.e : '?'; const ch = chance(); chB.textContent = ch ? pct(ch) : '—';
+    arc.style.strokeDasharray = `${C * ch / 100} ${C}`; arc.setAttribute('transform', `rotate(${90 - ch * 3.6 / 2} 150 150)`);
+    tiles.replaceChildren(); tl.forEach(g => { const t = el('button', 'utile' + (g === tgt ? ' on' : '')); t.append(el('span', 'uie', g.e), el('small', null, mul(g.p / v))); t.onclick = () => { if (!busy) pick(g); }; tiles.appendChild(t); if (g === tgt) setTimeout(() => t.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }), 30); });
+    sl.disabled = !tl.length || busy; sl.min = 0; sl.max = Math.max(0, tl.length - 1); sl.value = Math.max(0, tl.indexOf(tgt)); mult.textContent = tgt ? mul(tgt.p / v) : '×1';
+    go.disabled = busy || !tgt; go.textContent = busy ? 'Крутим…' : (tgt ? '⏫ Улучшить' : 'Выберите ставку');
+  }
+  sl.oninput = () => { if (!busy && tl[+sl.value]) { tgt = tl[+sl.value]; update(); } };
+  from.onclick = () => { if (!busy) sheetStake(); };
+  function sheetStake() {
+    openSheet('Что улучшаем?', (b, close) => {
+      b.appendChild(el('div', 'sect', 'Алмазы · баланс 💎 ' + fmtN(dia())));
+      const row = el('div', 'uamts'); [10, 25, 50, 100, 250, 500, 1000].filter(x => x <= dia()).concat(dia() >= 10 ? [dia()] : []).filter((x, i, a) => a.indexOf(x) === i).forEach((x, i, a) => {
+        const c = el('button', 'uchip', i === a.length - 1 && x === dia() && x > 1000 || (i === a.length - 1 && x === dia() && ![10, 25, 50, 100, 250, 500, 1000].includes(x)) ? 'Все ' + fmtN(x) : fmtN(x)); c.onclick = () => { stake = { type: 'dia', v: x }; close(); update(); }; row.appendChild(c); });
+      if (!row.children.length) row.appendChild(el('div', 'note2', 'Алмазов пока нет (минимум 10). Их можно получить по коду.')); b.appendChild(row);
+      b.appendChild(el('div', 'sect', 'Мои подарки')); const items = upOwned(), grid = el('div', 'ggrid');
+      if (!items.length) b.appendChild(el('div', 'note2', 'Подарков пока нет. Их дарят друзья в личных чатах, а выигранные здесь появятся тут.'));
+      items.forEach(it => { const t = el('button', 'gtile'); t.append(el('span', 'ge', it.g.e), el('b', null, it.g.n), el('small', null, '💎 ' + fmtN(it.g.p))); t.onclick = () => { stake = it; close(); update(); }; grid.appendChild(t); });
+      b.appendChild(grid);
+    });
+  }
+  const owned = upOwned(); stake = owned.length ? owned.slice().sort((a, b) => a.g.p - b.g.p)[0] : (dia() >= 10 ? { type: 'dia', v: Math.min(dia(), 25) } : null);
+  go.onclick = () => {
+    if (busy || !stake || !tgt) return;
+    if (stake.type === 'dia') { if (dia() < stake.v) { toast('Не хватает алмазов'); stake = null; update(); return; } me.d = dia() - stake.v; markDirty('me'); }
+    else { if (!upOwned().some(x => x.id === stake.id)) { toast('Этого подарка уже нет'); stake = null; update(); return; } upRemove(stake); }
+    const used = stake, target = tgt, ch = chance(), a = ch * 3.6, r = Math.random() * 100, win = r < ch;
+    const th0 = win ? -a / 2 + r / ch * a : a / 2 + (r - ch) / (100 - ch) * (360 - a), dur = FAST ? 1.2 : 5.2;
+    busy = true; update(); wheel.classList.add('spin');
+    ptr.style.transition = 'none'; ptr.style.transform = 'rotate(0deg)'; void ptr.getBoundingClientRect();
+    ptr.style.transition = `transform ${dur}s cubic-bezier(.14,.6,.08,1)`; ptr.style.transform = `rotate(${360 * 6 + th0}deg)`;
+    timer = setTimeout(() => finish(win, used, target), dur * 1000 + 250);
+  };
+  function finish(win, used, target) {
+    busy = false; wheel.classList.remove('spin');
+    const ov = el('div', 'ures'), cd = el('div', 'ucardres'); ov.appendChild(cd);
+    if (win) {
+      const it = upAdd(target); announce(true); cd.append(el('h3', null, '🎉 Улучшение удалось!'), nftCard(target, it.id, 200), el('p', null, 'Подарок «' + target.n + '» добавлен в вашу коллекцию'));
+      stake = it;
+    } else {
+      cd.append(el('div', 'uburn', '🔥'), el('h3', null, 'Не повезло'), el('p', null, (used.type === 'dia' ? '💎 ' + fmtN(used.v) : '«' + used.g.n + '»') + ' сгорел. Шанс был ' + pct(chance())));
+      stake = used.type === 'dia' && dia() >= used.v ? used : null;
+    }
+    const ok = el('button', 'ugo', win ? 'Отлично' : 'Попробовать ещё'); ok.onclick = () => { ov.remove(); update(); }; cd.appendChild(ok); root.appendChild(ov); update();
+  }
+  update();
+  return () => clearTimeout(timer);
+}
 
 /* ===================== 2048 ===================== */
 function g2048(body, api) {
@@ -2412,10 +2547,14 @@ $('#btnBg').innerHTML = I.palette; $('#btnBg').onclick = () => { const c = curCh
 
 /* ===================== подарки и алмазы ===================== */
 const GIFTS = [
-  { id: 'heart', e: '💖', n: 'Сердце', p: 10 }, { id: 'bear', e: '🧸', n: 'Мишка', p: 25 }, { id: 'rose', e: '🌹', n: 'Роза', p: 40 },
-  { id: 'cake', e: '🎂', n: 'Торт', p: 60 }, { id: 'pizza', e: '🍕', n: 'Пицца', p: 75 }, { id: 'cup', e: '🏆', n: 'Кубок', p: 120 },
-  { id: 'rocket', e: '🚀', n: 'Ракета', p: 250 }, { id: 'ring', e: '💍', n: 'Кольцо', p: 500 }, { id: 'crown', e: '👑', n: 'Корона', p: 1000 },
-  { id: 'dragon', e: '🐉', n: 'Дракон', p: 2500 },
+  { id: 'heart', e: '💖', n: 'Сердце', p: 10 }, { id: 'candy', e: '🍬', n: 'Конфета', p: 15 }, { id: 'balloon', e: '🎈', n: 'Шарик', p: 20 },
+  { id: 'bear', e: '🧸', n: 'Мишка', p: 25 }, { id: 'tulip', e: '🌷', n: 'Тюльпан', p: 32 }, { id: 'rose', e: '🌹', n: 'Роза', p: 40 },
+  { id: 'bouquet', e: '💐', n: 'Букет', p: 50 }, { id: 'cake', e: '🎂', n: 'Торт', p: 60 }, { id: 'pizza', e: '🍕', n: 'Пицца', p: 75 },
+  { id: 'champ', e: '🍾', n: 'Шампанское', p: 90 }, { id: 'cup', e: '🏆', n: 'Кубок', p: 120 }, { id: 'box', e: '🎁', n: 'Сюрприз', p: 150 },
+  { id: 'guitar', e: '🎸', n: 'Гитара', p: 200 }, { id: 'rocket', e: '🚀', n: 'Ракета', p: 250 }, { id: 'unicorn', e: '🦄', n: 'Единорог', p: 320 },
+  { id: 'ring', e: '💍', n: 'Кольцо', p: 500 }, { id: 'orb', e: '🔮', n: 'Шар судьбы', p: 700 }, { id: 'crown', e: '👑', n: 'Корона', p: 1000 },
+  { id: 'dino', e: '🦖', n: 'Динозавр', p: 1500 }, { id: 'dragon', e: '🐉', n: 'Дракон', p: 2500 }, { id: 'planet', e: '🪐', n: 'Планета', p: 4000 },
+  { id: 'castle', e: '🏰', n: 'Замок', p: 6000 },
 ];
 const giftOf = id => GIFTS.find(g => g.id === id);
 const dia = () => Math.max(0, Math.floor(+me.d || 0));
@@ -2454,9 +2593,9 @@ function giftBody(m, b) {
   b.append(el('div', 'gtt', mine ? 'Вы подарили' : 'Вам подарили'), c, el('div', 'gpr', '💎 ' + fmtN(g.p)));
 }
 function sheetGifts(uid) {
-  const c = chats['dm:' + uid]; if (!c) return;
-  const nick = cName(c);
-  openSheet('Подарок для ' + nick, (body, close) => {
+  const self = uid === me.uid, c = self ? null : chats['dm:' + uid]; if (!self && !c) return;
+  const nick = self ? '' : cName(c);
+  openSheet(self ? 'Подарок себе' : 'Подарок для ' + nick, (body, close) => {
     const bal = el('div', 'dbal'); const upd = () => bal.textContent = 'Ваши алмазы: 💎 ' + fmtN(dia()); upd(); body.appendChild(bal);
     const grid = el('div', 'ggrid');
     for (const g of GIFTS) {
@@ -2464,12 +2603,13 @@ function sheetGifts(uid) {
       t.onclick = async () => {
         if (dia() < g.p) { toast('Не хватает алмазов'); return; }
         close();
+        if (self) { me.d = dia() - g.p; const it = upAdd(g, 'Вы'); announce(true); toast('Подарок добавлен в вашу коллекцию: ' + g.e); if (typeof renderProfilePage === 'function') renderProfilePage(); return; }
         const ok = await sendTextTo(c, JSON.stringify({ g: g.id }), ['gift']);
         if (ok) { rememberGiven(uid, g.id, ok.id); me.d = dia() - g.p; markDirty('me'); toast('Подарок отправлен: ' + g.e); if (cur !== c.id) openChat(c.id); } else toast('Не удалось отправить подарок');
       }; grid.appendChild(t);
     }
     body.appendChild(grid);
-    body.appendChild(el('p', 'note2', 'Подарки можно дарить только в личных чатах. Они появятся в профиле получателя.'));
+    body.appendChild(el('p', 'note2', 'Подарки можно дарить в личных чатах и самому себе. Они появятся в профиле получателя.'));
   });
 }
 /* ---- секретный код: пять нажатий на «Игры» ---- */
@@ -2699,7 +2839,10 @@ function sheetProfile(uid) {
     if (!isMe) {
       const w = el('button', 'btn', '💬 Написать'); w.onclick = () => { close(); openDm(uid, nick); }; acts.appendChild(w);
       const gf = el('button', 'btn sec2', '🎁 Подарить'); gf.onclick = () => { close(); openDm(uid, nick); setTimeout(() => sheetGifts(uid), 150); }; acts.appendChild(gf);
-    } else { const b = el('button', 'btn', '✏️ Редактировать'); b.onclick = () => { close(); showPage('profile'); }; acts.appendChild(b); }
+    } else {
+      const b = el('button', 'btn', '✏️ Редактировать'); b.onclick = () => { close(); showPage('profile'); }; acts.appendChild(b);
+      const gs = el('button', 'btn sec2', '🎁 Себе'); gs.onclick = () => { close(); sheetGifts(me.uid); }; acts.appendChild(gs);
+    }
     body.appendChild(acts);
     const mu = cleanMu(isMe ? me.mu : u.mu); if (mu) { body.appendChild(el('div', 'sect', 'Музыка')); body.appendChild(musicCard(mu, false)); }
     const gl = (isMe ? me.gl : u.gl) || [], cnt = Object.values((isMe ? me.gifts : u.g) || {}).reduce((s, x) => s + x, 0);
@@ -2710,6 +2853,41 @@ function sheetProfile(uid) {
       body.appendChild(b);
     }
   });
+}
+/* ===================== галочки: отправлено / прочитано ===================== */
+const TK1 = '<svg viewBox="0 0 16 11" width="15" height="10"><path d="M1.5 5.8L5 9.3L12.5 1.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const TK2 = '<svg viewBox="0 0 20 11" width="19" height="10"><path d="M1.5 5.8L5 9.3L12.5 1.5M8 8.2l1.1 1.1L16.5 1.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function tickOf(c, m) {
+  if (m.u !== me.uid || m.k === 'sys') return 0;
+  if (me.nr || c.kind === 'channel') return 1;
+  const rd = c.rd || {}; return Object.keys(rd).some(u => u !== me.uid && rd[u] >= m.t) ? 2 : 1;
+}
+function tickEl(c, m) {
+  const n = tickOf(c, m); if (!n) return null;
+  const s = el('span', 'tk' + (n === 2 ? ' rd' : '')); s.innerHTML = n === 2 ? TK2 : TK1; s.title = n === 2 ? 'Прочитано' : 'Отправлено'; return s;
+}
+function refreshTicks(c) {
+  if (cur !== c.id) return;
+  const arr = msgs[c.id] || [];
+  box.querySelectorAll('[data-mid]').forEach(row => {
+    const m = arr.find(x => x.id === row.dataset.mid); if (!m || m.u !== me.uid) return;
+    const t = row.querySelector('.bubble .t'); if (!t) return; const old = t.querySelector('.tk'), nw = tickEl(c, m);
+    if (old) old.remove(); if (nw) t.appendChild(nw);
+  });
+}
+function ingestRead(c, raw, p) {
+  let b; try { b = JSON.parse(raw.message); } catch { return; }
+  if (!b || !p.u || p.u === me.uid || !Number.isFinite(+b.t)) return;
+  c.rd = c.rd || {}; if ((c.rd[p.u] || 0) >= +b.t) return; c.rd[p.u] = +b.t; markDirty('chats'); refreshTicks(c);
+}
+let rcTimer = 0;
+function sendReceipt(c) {            // говорим собеседникам, что прочитали (до последнего чужого сообщения)
+  if (!c || me.nr || c.kind === 'channel' || document.hidden || cur !== c.id) return;
+  clearTimeout(rcTimer); rcTimer = setTimeout(async () => {
+    const a = msgs[c.id] || []; let last = 0; for (let i = a.length - 1; i >= 0; i--) if (a[i].u !== me.uid && a[i].k !== 'sys') { last = a[i].t; break; }
+    if (!last || last <= (c.rs || 0)) return; c.rs = last; markDirty('chats');
+    try { await sendCtl(c, 'read', { t: last }); } catch { c.rs = 0; }
+  }, 700);
 }
 async function shrinkImage(file) {
   if (file.type === 'image/gif' || file.size < 450 * 1024) return null;
@@ -3240,7 +3418,7 @@ function renderMsg(c, m) {
   }
   const col = el('div', 'col'); col.dataset.mid = m.id;
   if (first && !mine && names) { const n = el('div', 'name clk', m.n); n.style.color = `hsl(${Number.isFinite(+m.h) && m.h !== null ? m.h : hueOf(m.n)} 85% var(--nl))`; if (m.u) n.onclick = () => sheetProfile(m.u); col.appendChild(n); }
-  const b = el('div', 'bubble'); if (m.rp) b.appendChild(quoteEl(c, m)); buildBody(m, b); b.appendChild(el('div', 't', (m.ed ? 'изм. ' : '') + fmtClock(m.t)));
+  const b = el('div', 'bubble'); if (m.rp) b.appendChild(quoteEl(c, m)); buildBody(m, b); { const tt = el('div', 't', (m.ed ? 'изм. ' : '') + fmtClock(m.t)), tk = tickEl(c, m); if (tk) tt.appendChild(tk); b.appendChild(tt); }
   if (m.k !== 'sys') bindMsgMenu(b, c, m);
   b.addEventListener('dblclick', () => { const mr = (m.r && m.r[me.uid]) || {}; sendReact(c, m, mr.e === '❤️' ? '' : '❤️'); });
   col.appendChild(b); const rb = reactBar(c, m); if (rb) col.appendChild(rb); row.appendChild(col); box.appendChild(row);
@@ -3280,7 +3458,7 @@ $('#btnWalkie').onclick = () => {
   $('#wmem').textContent = c.kind === 'dm' ? 'Личная связь' : 'На связи: ' + Object.values(c.members || {}).map(x => x.n).concat(me.nick).join(', ');
   enterWalkie();
 };
-function markRead(c) { const a = msgs[c.id] || []; if (a.length) c.read = Math.max(c.read || 0, a[a.length - 1].t); markDirty('chats'); }
+function markRead(c) { const a = msgs[c.id] || []; if (a.length) c.read = Math.max(c.read || 0, a[a.length - 1].t); markDirty('chats'); sendReceipt(c); }
 function openChat(id) {
   const c = chats[id]; if (!c) return;
   if (cur && cur !== id) leaveView();
